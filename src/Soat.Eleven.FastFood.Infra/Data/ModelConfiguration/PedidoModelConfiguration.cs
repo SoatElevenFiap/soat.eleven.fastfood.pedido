@@ -30,11 +30,6 @@ public class PedidoModelConfiguration : EntityBaseModelConfiguration<PedidoModel
             .HasPrecision(10, 2)
             .IsRequired();
 
-        builder.HasOne(c => c.Cliente)
-               .WithMany()
-               .HasForeignKey(c => c.ClienteId)
-               .IsRequired(false);
-
         builder.HasMany(c => c.Itens)
                .WithOne(i => i.Pedido)
                .HasForeignKey(i => i.PedidoId);

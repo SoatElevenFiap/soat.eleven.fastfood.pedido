@@ -23,5 +23,4 @@ public class ItemPedido
     public decimal DescontoUnitario { get; set; }
 
     public Pedido Pedido { get; set; } = null!;
-    public Produto Produto { get; set; } = null!;
 }

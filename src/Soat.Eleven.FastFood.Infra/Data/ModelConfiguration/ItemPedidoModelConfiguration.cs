@@ -19,9 +19,5 @@ public class ItemPedidoModelConfiguration : EntityBaseModelConfiguration<ItemPed
         builder.HasOne(c => c.Pedido)
                .WithMany(p => p.Itens)
                .HasForeignKey(c => c.PedidoId);
-
-        builder.HasOne(c => c.Produto)
-               .WithMany()
-               .HasForeignKey(c => c.ProdutoId);
     }
 }

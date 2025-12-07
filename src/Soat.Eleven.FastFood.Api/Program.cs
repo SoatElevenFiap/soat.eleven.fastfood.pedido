@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Soat.Eleven.FastFood.Api.Configuration;
 using Soat.Eleven.FastFood.Infra.Data;
-using Soat.Eleven.FastFood.Api.Adapters;
 using Soat.Eleven.FastFood.Core.Enums;
-using Soat.Eleven.FastFood.Core.Interfaces.Services;
 
 const string SECRET_KEY_PASS = "5180e58ff93cef142763fdf3cc11f36c16335292a69bf201a4f72a834e625038032d04823966b02ff320564a0bc677c4bdcf3d67be724879b33711b04ba3e337";
 
@@ -61,7 +59,6 @@ builder.Services.AddHealthChecks()
     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy());
 
 builder.Services.RegisterServices();
-builder.Services.AddScoped<IArmazenamentoArquivoGateway, ArmazenamentoArquivoAdapter>();
 
 builder.Services.AddSwaggerConfiguration();
 

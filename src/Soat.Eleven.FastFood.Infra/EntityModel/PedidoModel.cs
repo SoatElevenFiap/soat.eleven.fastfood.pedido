@@ -29,7 +29,6 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.EntityModel
         public decimal Desconto { get; set; }
         public decimal Total { get; set; }
 
-        public ClienteModel Cliente { get; set; } = null!;
         public ICollection<ItemPedidoModel> Itens { get; set; } = [];
         public ICollection<PagamentoPedidoModel> Pagamentos { get; set; } = [];
 
