@@ -1,0 +1,68 @@
+networks:
+  FastFood:
+    driver: bridge
+
+volumes:
+  db_data:
+
+services:
+  db:
+    build:
+      context: src/Soat.Eleven.FastFood.Infra/
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}         
+      POSTGRES_USER: ${POSTGRES_USER}     
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+    ports:
+      - "5432:5432" 
+    volumes:
+      - db_data:/var/lib/postgresql/data  
+    restart: always
+    networks:
+      - FastFood
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"] 
+      interval: 10s 
+      timeout: 5s 
+      retries: 5 
+      start_period: 10s 
+  migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}     
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} 
+      - POSTGRES_DB=${POSTGRES_DB}         
+      - ConnectionStrings__PostgresConnectionString=${POSTGRES_CONNECTION_STRING}
+    depends_on:
+       db:
+        condition: service_healthy
+    networks:
+      - FastFood
+    entrypoint: ["sh", "-c", "dotnet ef database update --connection 'Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}' --project src/Soat.Eleven.FastFood.Infra/Soat.Eleven.FastFood.Adapter.Infra.csproj --startup-project src/Soat.Eleven.FastFood.Api/Soat.Eleven.FastFood.Adapter.WebApi.csproj"]
+
+  app:
+    build:
+      context: ./ 
+      dockerfile: Dockerfile
+      target: final
+    ports:
+      - "8080:8080" 
+    depends_on:
+       db:
+        condition: service_healthy
+       migrator:
+        condition: service_completed_successfully 
+    environment: 
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}           
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} 
+      - ConnectionStrings__PostgresConnectionString=${POSTGRES_CONNECTION_STRING}
+    networks:
+      - FastFood 
+

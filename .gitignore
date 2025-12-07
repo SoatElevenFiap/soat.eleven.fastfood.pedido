@@ -1,0 +1,46 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# ASP.NET
+*.db
+*.db-shm
+*.db-wal
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Logs
+*.log
+
+# Others
+*.vs/
+TestResults/
+*.swp
+*.tmp
+*.bak
+
+# Dotnet tools
+.dotnet/
+
+# Variáveis de ambiente
+.env*
+wwwroot/
+*.tar
