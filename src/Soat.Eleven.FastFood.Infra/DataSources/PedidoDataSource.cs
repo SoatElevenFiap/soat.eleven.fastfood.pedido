@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Soat.Eleven.FastFood.Adapter.Infra.EntityModel;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Entities;
+using Soat.Eleven.FastFood.Core.Enums;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Infra.Data;
 
@@ -74,6 +75,19 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
             }).ToList();
 
             _dbSet.Update(model);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AtualizarStatusAsync(Guid pedidoId, StatusPedido status)
+        {
+            var model = await _dbSet.FindAsync(pedidoId);
+
+            if (model == null)
+            {
+                throw new ArgumentException($"Pedido com ID {pedidoId} não encontrado.");
+            }
+
+            model.Status = status;
             await _context.SaveChangesAsync();
         }
 

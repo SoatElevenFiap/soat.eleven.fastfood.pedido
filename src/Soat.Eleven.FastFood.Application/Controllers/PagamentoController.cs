@@ -1,53 +1,25 @@
-﻿using Soat.Eleven.FastFood.Application.UseCases;
+﻿using Soat.Eleven.FastFood.Core.AntiCorruption;
 using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
-using Soat.Eleven.FastFood.Core.DTOs.Webhooks;
-using Soat.Eleven.FastFood.Core.Entities;
-using Soat.Eleven.FastFood.Core.Enums;
-using Soat.Eleven.FastFood.Core.Gateways;
-using Soat.Eleven.FastFood.Common.Interfaces.DataSources;
+using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 
 namespace Soat.Eleven.FastFood.Application.Controllers;
 
 public class PagamentoController
 {
-    private readonly IPagamentoDataSource _pagamentoDataSource;
-    private readonly PagamentoGateway? _pagamentoGateway;
+    private readonly IPedidoDataSource _pedidoDataSource;
 
-    public PagamentoController(IPagamentoDataSource pagamentoDataSource)
+    public PagamentoController(IPedidoDataSource pedidoDataSource)
     {
-        _pagamentoDataSource = pagamentoDataSource;
-        _pagamentoGateway = new PagamentoGateway(pagamentoDataSource);
+        _pedidoDataSource = pedidoDataSource;
     }
 
-    public PagamentoController(PagamentoGateway pagamentoGateway)
+    public async Task AtualizarStatusPagamento(ConfirmacaoPagamento notificacao, Guid pedidoId)
     {
-        _pagamentoGateway = pagamentoGateway;
-    }
-    
-    public async Task<ConfirmacaoPagamento> ConfirmarPagamento(NotificacaoPagamentoDto notificacaoPagamentoDto)
-    {
-        var useCase = new PagamentoUseCase(_pagamentoGateway!);
-        var result = await useCase.ConfirmarPagamento(notificacaoPagamentoDto);
-        return result;
-    }
-
-    public async Task<PagamentoPedido> CriarOrdemPagamento(CriarOrdemPagamentoDto request)
-    {
-        var pagamento = new PagamentoPedido(
-            request.Tipo,
-            request.Valor,
-            StatusPagamento.Pendente,
-            string.Empty)
+        var novoStatus = PagamentoStatusTranslator.ToStatusPedido(notificacao.Status);
+        
+        if (novoStatus.HasValue)
         {
-            PedidoId = request.PedidoId
-        };
-
-        return await _pagamentoDataSource.AddAsync(pagamento);
-    }
-
-    public async Task AtualizarStatusPagamento(PagamentoStatusDto notificacao)
-    {
-        var confirmacao = new ConfirmacaoPagamento(notificacao.Status, notificacao.Autorizacao ?? string.Empty);
-        await _pagamentoDataSource.UpdateAsync(notificacao.PedidoId, confirmacao);
+            await _pedidoDataSource.AtualizarStatusAsync(pedidoId, novoStatus.Value);
+        }
     }
 }

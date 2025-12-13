@@ -31,15 +31,16 @@ public class PagamentoDataSource : IPagamentoDataSource
     public async Task UpdateAsync(Guid pedidoId, ConfirmacaoPagamento confirmacaoPagamento)
     {
         var model = await _dbSet.FirstOrDefaultAsync(e => e.PedidoId == pedidoId);
+        var status = ParseStatus(confirmacaoPagamento.Status);
 
         if (model == null)
         {
             // Create a new payment record if it doesn't exist
             var newPagamento = new PagamentoPedido(
-                TipoPagamento.MercadoPago, // Default type for webhook payments
-                0, // Default value, should be retrieved from order
-                confirmacaoPagamento.Status,
-                confirmacaoPagamento.Autorizacao)
+                TipoPagamento.MercadoPago,
+                confirmacaoPagamento.Value,
+                status,
+                confirmacaoPagamento.Id ?? string.Empty)
             {
                 PedidoId = pedidoId
             };
@@ -48,11 +49,23 @@ public class PagamentoDataSource : IPagamentoDataSource
             return;
         }
 
-        model.Status = confirmacaoPagamento.Status;
-        model.Autorizacao = confirmacaoPagamento.Autorizacao;
+        model.Status = status;
+        model.Autorizacao = confirmacaoPagamento.Id ?? string.Empty;
+        model.Valor = confirmacaoPagamento.Value;
 
         _dbSet.Update(model);
         await _context.SaveChangesAsync();
+    }
+
+    private static StatusPagamento ParseStatus(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "approved" or "aprovado" => StatusPagamento.Aprovado,
+            "rejected" or "rejeitado" or "refunded" => StatusPagamento.Rejeitado,
+            "pending" or "pendente" => StatusPagamento.Pendente,
+            _ => StatusPagamento.Pendente
+        };
     }
     
     private static PagamentoPedidoModel Parse(PagamentoPedido entity)

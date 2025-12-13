@@ -18,9 +18,12 @@ public partial class PagamentoGateway
     
     public async Task<ConfirmacaoPagamento> ProcessarPagamento(Guid pedidoId)
     {
-        ConfirmacaoPagamento confirmacaoPagamento = new ConfirmacaoPagamento(
-            StatusPagamento.Pendente, 
-            new Random().Next(100000, 999999).ToString());
+        var confirmacaoPagamento = new ConfirmacaoPagamento
+        {
+            Id = new Random().Next(100000, 999999).ToString(),
+            Status = "pending",
+            Value = 0
+        };
         await _pagamentoDataSource.UpdateAsync(pedidoId, confirmacaoPagamento);
         return confirmacaoPagamento;
     }
@@ -30,9 +33,12 @@ public partial class PagamentoGateway
     {
         await ValidarPagamento(tipoPagamentoDto);
         
-        ConfirmacaoPagamento confirmacaoPagamento = new ConfirmacaoPagamento(
-            StatusPagamento.Aprovado, 
-            new Random().Next(100000, 999999).ToString());
+        var confirmacaoPagamento = new ConfirmacaoPagamento
+        {
+            Id = new Random().Next(100000, 999999).ToString(),
+            Status = "approved",
+            Value = 0
+        };
         await _pagamentoDataSource.UpdateAsync(pedidoId, confirmacaoPagamento);
         return confirmacaoPagamento;
     }
@@ -41,9 +47,12 @@ public partial class PagamentoGateway
     {
         await ValidarPagamento(tipoPagamentoDto);
 
-        ConfirmacaoPagamento confirmacaoPagamento = new ConfirmacaoPagamento(
-            StatusPagamento.Rejeitado,
-            "0");
+        var confirmacaoPagamento = new ConfirmacaoPagamento
+        {
+            Id = "0",
+            Status = "rejected",
+            Value = 0
+        };
 
         await _pagamentoDataSource.UpdateAsync(pedidoId, confirmacaoPagamento);
         return confirmacaoPagamento;

@@ -171,12 +171,12 @@ public class PedidoUseCase
         // if (pedido.Total != solicitacaoPagamento.Valor)
         //     throw new Exception($"Valor de pagamento difere do valor do pedido.");
 
-        if (pagamentoProcessado.Status == StatusPagamento.Aprovado)
+        if (pagamentoProcessado.Status?.ToLower() == "approved")
         {
             pedido.Status = StatusPedido.Recebido;
         }
 
-        pedido.AdicionarPagamento(new PagamentoPedido(solicitacaoPagamento.Tipo, solicitacaoPagamento.Valor, pagamentoProcessado.Status, pagamentoProcessado.Autorizacao));
+        pedido.AdicionarPagamento(new PagamentoPedido(solicitacaoPagamento.Tipo, solicitacaoPagamento.Valor, ParseStatus(pagamentoProcessado.Status), pagamentoProcessado.Id ?? string.Empty));
         if (pedido.SenhaPedido == null)
         {
             pedido.GerarSenha();
@@ -215,7 +215,7 @@ public class PedidoUseCase
             throw new Exception($"O status do pedido não permite pagamento.");
         
 
-        pedido.AdicionarPagamento(new PagamentoPedido(solicitacaoPagamento.Tipo, solicitacaoPagamento.Valor, pagamentoProcessado.Status, pagamentoProcessado.Autorizacao));
+        pedido.AdicionarPagamento(new PagamentoPedido(solicitacaoPagamento.Tipo, solicitacaoPagamento.Valor, ParseStatus(pagamentoProcessado.Status), pagamentoProcessado.Id ?? string.Empty));
         if (pedido.SenhaPedido == null)
         {
             pedido.GerarSenha();
@@ -224,5 +224,16 @@ public class PedidoUseCase
         Pedido updatedPedido = await _pedidoGateway.AtualizarPedido(pedido);
 
         return pagamentoProcessado;
+    }
+
+    private static StatusPagamento ParseStatus(string? status)
+    {
+        return status?.ToLower() switch
+        {
+            "approved" or "aprovado" => StatusPagamento.Aprovado,
+            "rejected" or "rejeitado" or "refunded" => StatusPagamento.Rejeitado,
+            "pending" or "pendente" => StatusPagamento.Pendente,
+            _ => StatusPagamento.Pendente
+        };
     }
 }
