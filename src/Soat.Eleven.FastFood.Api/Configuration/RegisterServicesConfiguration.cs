@@ -2,20 +2,24 @@
 using Soat.Eleven.FastFood.Adapter.Infra.Services;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Core.Interfaces.Services;
-using Soat.Eleven.FastFood.Common.Interfaces.DataSources;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class RegisterServicesConfiguration
 {
-    public static void RegisterServices(this IServiceCollection serviceCollection)
+    public static void RegisterServices(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         #region Data Sources
         serviceCollection.AddScoped<IPedidoDataSource, PedidoDataSource>();
-        serviceCollection.AddScoped<IPagamentoDataSource, PagamentoDataSource>();
         #endregion       
 
-        // Services
-        serviceCollection.AddScoped<IMercadoPagoService, MercadoPagoService>();
+        #region Services
+        // Configurar HttpClient para o serviço de pagamento
+        var pagamentoBaseUrl = configuration["PagamentoService:BaseUrl"] ?? "http://localhost:5001";
+        serviceCollection.AddHttpClient<IPagamentoService, PagamentoService>(client =>
+        {
+            client.BaseAddress = new Uri(pagamentoBaseUrl);
+        });
+        #endregion
     }
 }

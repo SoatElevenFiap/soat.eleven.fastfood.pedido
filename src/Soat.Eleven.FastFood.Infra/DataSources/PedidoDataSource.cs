@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Soat.Eleven.FastFood.Adapter.Infra.EntityModel;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
-using Soat.Eleven.FastFood.Core.Entities;
 using Soat.Eleven.FastFood.Core.Enums;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Infra.Data;
@@ -32,7 +31,6 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
         {
             var result = await _dbSet
                 .Include(p => p.Itens)
-                .Include(p => p.Pagamentos)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.Id == id);
 
@@ -43,7 +41,6 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
         {
             var result = await _dbSet
                 .Include(p => p.Itens)
-                .Include(p => p.Pagamentos)
                 .AsSplitQuery()
                 .AsNoTracking()
                 .ToListAsync();
@@ -132,15 +129,6 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
                     Quantidade = i.Quantidade,
                     DescontoUnitario = i.DescontoUnitario,
                     PrecoUnitario = i.PrecoUnitario
-                }).ToList(),
-                Pagamentos = model.Pagamentos.Select(p => new PagamentoPedidoOutputDto
-                {
-                    Id = p.Id,
-                    Tipo = p.Tipo.ToString(),
-                    Valor = p.Valor,
-                    Status = p.Status.ToString(),
-                    Autorizacao = p.Autorizacao,
-                    Troco = p.Troco
                 }).ToList()
             };
         }

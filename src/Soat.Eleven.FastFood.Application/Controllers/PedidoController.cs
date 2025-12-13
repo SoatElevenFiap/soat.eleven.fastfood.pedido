@@ -1,7 +1,4 @@
-﻿using Soat.Eleven.FastFood.Common.Interfaces.DataSources;
-using Soat.Eleven.FastFood.Core.DTOs;
-using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
-using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
+﻿using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Gateways;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Core.Presenters;
@@ -12,17 +9,15 @@ namespace Soat.Eleven.FastFood.Application.Controllers;
 public class PedidoController
 {
     private readonly IPedidoDataSource _pedidoDataSource;
-    private readonly IPagamentoDataSource _pagamentoDataSource;
 
-    public PedidoController(IPedidoDataSource pedidoGateway, IPagamentoDataSource pagamentoDataSource)
+    public PedidoController(IPedidoDataSource pedidoDataSource)
     {
-        _pedidoDataSource = pedidoGateway;
-        _pagamentoDataSource = pagamentoDataSource;
+        _pedidoDataSource = pedidoDataSource;
     }
 
     private PedidoUseCase FabricarUseCase()
     {
-        var pedidoGateway = new PedidoGateway(_pedidoDataSource, _pagamentoDataSource);
+        var pedidoGateway = new PedidoGateway(_pedidoDataSource);
         return PedidoUseCase.Create(pedidoGateway);
     }
 
@@ -32,11 +27,6 @@ public class PedidoController
         var result = await useCase.CriarPedido(inputDto);
 
         return PedidoPresenter.Output(result);
-    }
-    public async Task<StatusPagamentoPedidoDto> StatusPagamentoPedido(Guid idPedido)
-    {
-        var useCase = FabricarUseCase();
-        return await useCase.StatusPagamentoPedido(idPedido);
     }
 
     public async Task<PedidoOutputDto> AtualizarPedido(PedidoInputDto inputDto)
@@ -61,24 +51,6 @@ public class PedidoController
         var result = await useCase.ObterPedidoPorId(id);
 
         return PedidoPresenter.Output(result);
-    }
-
-    public async Task<ConfirmacaoPagamento> PagarPedido(SolicitacaoPagamento solicitacaoPagamento, 
-                                                        PagamentoGateway pagamentoGateway,
-                                                        TipoPagamentoDto tipoPagamentoDto = default)
-    {
-       
-        var useCase = FabricarUseCase();
-        return await useCase.PagarPedido(solicitacaoPagamento, pagamentoGateway, tipoPagamentoDto);
-    }
-
-    public async Task<ConfirmacaoPagamento> RecusarPagamento(SolicitacaoPagamento solicitacaoPagamento,
-                                                        PagamentoGateway pagamentoGateway,
-                                                        TipoPagamentoDto tipoPagamentoDto = default)
-    {
-
-        var useCase = FabricarUseCase();
-        return await useCase.RecusarPagamento(solicitacaoPagamento, pagamentoGateway, tipoPagamentoDto);
     }
 
     public async Task IniciarPreparacaoPedido(Guid id)

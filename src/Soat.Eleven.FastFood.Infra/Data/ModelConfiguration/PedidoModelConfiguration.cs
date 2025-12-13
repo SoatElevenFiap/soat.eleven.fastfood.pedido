@@ -33,9 +33,5 @@ public class PedidoModelConfiguration : EntityBaseModelConfiguration<PedidoModel
         builder.HasMany(c => c.Itens)
                .WithOne(i => i.Pedido)
                .HasForeignKey(i => i.PedidoId);
-
-        builder.HasMany(c => c.Pagamentos)
-               .WithOne(p => p.Pedido)
-               .HasForeignKey(p => p.PedidoId);
     }
 }

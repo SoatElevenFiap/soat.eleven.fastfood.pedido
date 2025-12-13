@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Soat.Eleven.FastFood.Application.Controllers;
-using Soat.Eleven.FastFood.Common.Interfaces.DataSources;
-using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Enums;
-using Soat.Eleven.FastFood.Core.Gateways;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 
 namespace Soat.Eleven.FastFood.Api.Controllers
@@ -16,15 +13,12 @@ namespace Soat.Eleven.FastFood.Api.Controllers
     {
         private readonly ILogger<PedidoRestEndpoints> _logger;
         private readonly IPedidoDataSource _pedidoDataSource;
-        private readonly IPagamentoDataSource _pagamentoDataSource;
 
         public PedidoRestEndpoints(ILogger<PedidoRestEndpoints> logger,
-                                   IPedidoDataSource pedidoGateway, 
-                                   IPagamentoDataSource pagamentoDataSource)
+                                   IPedidoDataSource pedidoDataSource)
         {
             _logger = logger;
-            _pedidoDataSource = pedidoGateway;
-            _pagamentoDataSource = pagamentoDataSource;
+            _pedidoDataSource = pedidoDataSource;
         }
 
         [HttpPost]
@@ -33,7 +27,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 var pedidoCriado = await controller.CriarPedido(pedidoDto);
                 return CreatedAtAction(nameof(CriarPedido), pedidoCriado);
             }
@@ -50,7 +44,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 var pedidos = await controller.ListarPedidos();
                 return Ok(pedidos);
             }
@@ -67,7 +61,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 var pedido = await controller.ObterPedidoPorId(id);
                 return Ok(pedido);
             }
@@ -85,7 +79,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
             try
             {
                 pedidoDto.Id = id;
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 var pedidoAtualizado = await controller.AtualizarPedido(pedidoDto);
                 return Ok(pedidoAtualizado);
             }
@@ -96,32 +90,13 @@ namespace Soat.Eleven.FastFood.Api.Controllers
             }
         }
 
-        [HttpPost("{id:guid}/pagar")]
-        [Authorize(PolicyRole.ClienteTotem)]
-        public async Task<IActionResult> PagarPedido(Guid id, [FromBody] SolicitacaoPagamento pagamento)
-        {
-            try
-            {
-                pagamento.PedidoId = id;
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
-                var _pagamentoGateway = new PagamentoGateway(_pagamentoDataSource);
-                var pagamentoProcessado = await controller.PagarPedido(pagamento, _pagamentoGateway);
-                return Ok(pagamentoProcessado);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro ao pagar o pedido");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         [HttpPost("{id:guid}/iniciar-preparacao")]
         [Authorize(PolicyRole.Administrador)]
         public async Task<IActionResult> IniciarPreparacaoPedido(Guid id)
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 await controller.IniciarPreparacaoPedido(id);
                 return NoContent();
             }
@@ -138,7 +113,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 await controller.FinalizarPreparacao(id);
                 return NoContent();
             }
@@ -155,7 +130,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 await controller.FinalizarPedido(id);
                 return NoContent();
             }
@@ -172,7 +147,7 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource, _pagamentoDataSource);
+                var controller = new PedidoController(_pedidoDataSource);
                 await controller.CancelarPedido(id);
                 return NoContent();
             }

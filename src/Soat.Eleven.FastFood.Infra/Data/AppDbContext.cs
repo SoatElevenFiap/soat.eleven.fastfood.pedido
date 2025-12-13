@@ -8,7 +8,6 @@ namespace Soat.Eleven.FastFood.Infra.Data
     {
         public DbSet<PedidoModel> Pedidos { get; set; }
         public DbSet<ItemPedidoModel> ItensPedido { get; set; }
-        public DbSet<PagamentoPedidoModel> PagamentosPedido { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -17,7 +16,6 @@ namespace Soat.Eleven.FastFood.Infra.Data
             #region Configuration Pedido
             modelBuilder.ApplyConfiguration(new PedidoModelConfiguration());
             modelBuilder.ApplyConfiguration(new ItemPedidoModelConfiguration());
-            modelBuilder.ApplyConfiguration(new PagamentoPedidoModelConfiguration());
             #endregion
         }
     }

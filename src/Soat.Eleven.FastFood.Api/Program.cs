@@ -58,7 +58,7 @@ builder.Services.AddCors();
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy());
 
-builder.Services.RegisterServices();
+builder.Services.RegisterServices(builder.Configuration);
 
 builder.Services.AddSwaggerConfiguration();
 

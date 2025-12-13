@@ -19,15 +19,6 @@ public class PedidoPresenter
                 DescontoUnitario = i.DescontoUnitario,
                 PrecoUnitario = i.PrecoUnitario
             }).ToList() ?? [],
-            Pagamentos = output?.Pagamentos.Select(p => new PagamentoPedidoOutputDto
-            {
-                Id = p.Id,
-                Tipo = p.Tipo.ToString(),
-                Status = p.Status.ToString(),
-                Troco = p.Troco,
-                Autorizacao = p.Autorizacao,
-                Valor = p.Valor
-            }).ToList() ?? [],
             SenhaPedido = output?.SenhaPedido ?? string.Empty,
             Subtotal = output?.Subtotal ?? 0,
             Desconto = output?.Desconto ?? 0,
