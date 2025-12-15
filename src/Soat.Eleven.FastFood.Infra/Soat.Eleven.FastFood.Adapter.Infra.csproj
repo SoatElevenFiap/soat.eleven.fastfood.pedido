@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Soat.Eleven.FastFood.Core\Soat.Eleven.FastFood.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
