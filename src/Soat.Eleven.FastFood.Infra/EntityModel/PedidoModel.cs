@@ -29,9 +29,7 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.EntityModel
         public decimal Desconto { get; set; }
         public decimal Total { get; set; }
 
-        public ClienteModel Cliente { get; set; } = null!;
         public ICollection<ItemPedidoModel> Itens { get; set; } = [];
-        public ICollection<PagamentoPedidoModel> Pagamentos { get; set; } = [];
 
         public void AdicionarItem(ItemPedidoModel item)
         {
@@ -60,13 +58,6 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.EntityModel
             }
 
             Itens.Remove(item);
-        }
-
-        public void AdicionarPagamento(PagamentoPedidoModel pagamento)
-        {
-            ArgumentNullException.ThrowIfNull(pagamento, nameof(pagamento));
-
-            Pagamentos.Add(pagamento);
         }
     }
 }

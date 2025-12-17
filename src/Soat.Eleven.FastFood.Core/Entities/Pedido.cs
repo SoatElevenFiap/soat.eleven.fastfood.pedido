@@ -43,9 +43,7 @@ public class Pedido
 
     public DateTime CriadoEm { get; set; }
 
-    public Cliente Cliente { get; set; } = null!;
     public ICollection<ItemPedido> Itens { get; set; } = [];
-    public ICollection<PagamentoPedido> Pagamentos { get; set; } = [];
 
     public void GerarSenha()
     {
@@ -82,13 +80,6 @@ public class Pedido
         }
 
         Itens.Remove(item);
-    }
-
-    public void AdicionarPagamento(PagamentoPedido pagamento)
-    {
-        ArgumentNullException.ThrowIfNull(pagamento, nameof(pagamento));
-
-        Pagamentos.Add(pagamento);
     }
 
     public void AtualizarId(Guid id)

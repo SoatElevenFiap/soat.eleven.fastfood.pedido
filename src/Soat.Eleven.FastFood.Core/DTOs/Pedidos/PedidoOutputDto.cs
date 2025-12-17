@@ -16,8 +16,6 @@ namespace Soat.Eleven.FastFood.Core.DTOs.Pedidos
 
         public DateTime CriadoEm { get; set; }
 
-        public ICollection<ItemPedidoOutputDto> Itens { get; set; } = [];
-
-        public ICollection<PagamentoPedidoOutputDto> Pagamentos { get; set; } = [];        
+        public ICollection<ItemPedidoOutputDto> Itens { get; set; } = [];     
     }
 }

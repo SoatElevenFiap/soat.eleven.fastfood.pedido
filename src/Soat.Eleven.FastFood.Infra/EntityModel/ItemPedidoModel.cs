@@ -24,7 +24,5 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.EntityModel
         public decimal DescontoUnitario { get; set; }
 
         public PedidoModel Pedido { get; set; } = null!;
-        public ProdutoModel Produto { get; set; } = null!;
     }
-
 }
