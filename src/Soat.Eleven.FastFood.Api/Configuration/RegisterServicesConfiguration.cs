@@ -1,5 +1,6 @@
 ﻿using Soat.Eleven.FastFood.Adapter.Infra.DataSources;
 using Soat.Eleven.FastFood.Adapter.Infra.Services;
+using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Core.Interfaces.Services;
 
@@ -12,6 +13,11 @@ public static class RegisterServicesConfiguration
         #region Data Sources
         serviceCollection.AddScoped<IPedidoDataSource, PedidoDataSource>();
         #endregion       
+
+        #region Settings
+        // Registrar PagamentoSettings para injeção de dependência
+        serviceCollection.Configure<PagamentoSettings>(configuration.GetSection(PagamentoSettings.SectionName));
+        #endregion
 
         #region Services
         // Configurar HttpClient para o serviço de pagamento

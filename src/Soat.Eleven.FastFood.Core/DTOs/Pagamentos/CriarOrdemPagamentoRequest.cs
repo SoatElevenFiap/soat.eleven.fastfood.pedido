@@ -2,14 +2,26 @@ using System.Text.Json.Serialization;
 
 namespace Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 
+/// <summary>
+/// Request para criação de ordem de pagamento
+/// </summary>
 public class CriarOrdemPagamentoRequest
 {
-    [JsonPropertyName("pedido_id")]
-    public Guid PedidoId { get; set; }
+    /// <summary>
+    /// Id externo para identificação posterior
+    /// </summary>
+    [JsonPropertyName("end_to_end_id")]
+    public required string EndToEndId { get; set; }
 
-    [JsonPropertyName("valor")]
-    public decimal Valor { get; set; }
+    /// <summary>
+    /// ID do cliente (recuperado das configurações/variáveis de ambiente)
+    /// </summary>
+    [JsonPropertyName("client_id")]
+    public required string ClientId { get; set; }
 
-    [JsonPropertyName("descricao")]
-    public string? Descricao { get; set; }
+    /// <summary>
+    /// Itens relacionados ao pagamento
+    /// </summary>
+    [JsonPropertyName("items")]
+    public required List<ItemPagamento> Items { get; set; }
 }

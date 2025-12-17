@@ -63,6 +63,8 @@ services:
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}           
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} 
       - ConnectionStrings__PostgresConnectionString=${POSTGRES_CONNECTION_STRING}
+      - PagamentoService__ClientId=${PAGAMENTO_CLIENT_ID}
+      - PagamentoService__BaseUrl=${PAGAMENTO_BASE_URL}
     networks:
       - FastFood 
 

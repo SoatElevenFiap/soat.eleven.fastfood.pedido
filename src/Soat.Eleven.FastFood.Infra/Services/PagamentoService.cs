@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 using Soat.Eleven.FastFood.Core.Interfaces.Services;
 
@@ -14,13 +15,20 @@ public class PagamentoService : IPagamentoService
     private readonly HttpClient _httpClient;
     private readonly ILogger<PagamentoService> _logger;
     private readonly string _baseUrl;
+    private readonly string _clientId;
 
-    public PagamentoService(HttpClient httpClient, IConfiguration configuration, ILogger<PagamentoService> logger)
+    public PagamentoService(HttpClient httpClient, IConfiguration configuration, IOptions<PagamentoSettings> pagamentoSettings, ILogger<PagamentoService> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
         _baseUrl = configuration["PagamentoService:BaseUrl"] ?? "http://localhost:5001";
+        _clientId = pagamentoSettings.Value.ClientId;
     }
+
+    /// <summary>
+    /// Obtém o ClientId configurado
+    /// </summary>
+    public string GetClientId() => _clientId;
 
     public async Task<OrdemPagamentoResponse> CriarOrdemPagamentoAsync(CriarOrdemPagamentoRequest request)
     {
@@ -34,13 +42,12 @@ public class PagamentoService : IPagamentoService
             
             return result ?? new OrdemPagamentoResponse 
             { 
-                PedidoId = request.PedidoId,
                 Status = "pending"
             };
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao criar ordem de pagamento para pedido {PedidoId}", request.PedidoId);
+            _logger.LogError(ex, "Erro ao criar ordem de pagamento para pedido {EndToEndId}", request.EndToEndId);
             throw;
         }
     }
