@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Soat.Eleven.FastFood.Adapter.Infra.EntityModel;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Enums;
@@ -11,11 +12,13 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
     {
         private readonly AppDbContext _context;
         private readonly DbSet<PedidoModel> _dbSet;
+        private readonly IConfiguration _configuration;
 
-        public PedidoDataSource(AppDbContext context)
+        public PedidoDataSource(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
             _dbSet = _context.Set<PedidoModel>();
+            _configuration = configuration;
         }
 
         public async Task<PedidoOutputDto> AddAsync(PedidoInputDto entity)
@@ -86,6 +89,11 @@ namespace Soat.Eleven.FastFood.Adapter.Infra.DataSources
 
             model.Status = status;
             await _context.SaveChangesAsync();
+        }
+
+        public string GetClientId()
+        {
+            return _configuration["PagamentoService:ClientId"] ?? string.Empty;
         }
 
         private static PedidoModel Parse(PedidoInputDto entity)

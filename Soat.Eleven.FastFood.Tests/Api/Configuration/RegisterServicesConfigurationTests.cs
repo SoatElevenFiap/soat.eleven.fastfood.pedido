@@ -19,6 +19,9 @@ public class RegisterServicesConfigurationTests
         var services = new ServiceCollection();
         var configuration = CriarConfigurationMock();
 
+        // Adicionar IConfiguration ao container de DI
+        services.AddSingleton<IConfiguration>(configuration);
+
         // Adicionar dependências necessárias para PedidoDataSource
         services.AddDbContext<Soat.Eleven.FastFood.Infra.Data.AppDbContext>(options =>
         {

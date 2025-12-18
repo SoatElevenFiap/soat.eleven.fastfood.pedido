@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Soat.Eleven.FastFood.Adapter.Infra.DataSources;
 using Soat.Eleven.FastFood.Adapter.Infra.EntityModel;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
@@ -13,6 +15,7 @@ public class PedidoDataSourceTests : IDisposable
 {
     private readonly AppDbContext _context;
     private readonly PedidoDataSource _dataSource;
+    private readonly Mock<IConfiguration> _configurationMock;
 
     public PedidoDataSourceTests()
     {
@@ -21,7 +24,9 @@ public class PedidoDataSourceTests : IDisposable
             .Options;
 
         _context = new AppDbContext(options);
-        _dataSource = new PedidoDataSource(_context);
+        _configurationMock = new Mock<IConfiguration>();
+        _configurationMock.Setup(x => x["PagamentoService:ClientId"]).Returns("test-client-id");
+        _dataSource = new PedidoDataSource(_context, _configurationMock.Object);
     }
 
     public void Dispose()

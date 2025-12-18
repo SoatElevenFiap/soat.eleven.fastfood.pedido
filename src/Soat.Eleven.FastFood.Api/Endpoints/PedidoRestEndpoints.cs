@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Soat.Eleven.FastFood.Application.Controllers;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
+using Soat.Eleven.FastFood.Core.Entities;
 using Soat.Eleven.FastFood.Core.Enums;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
+using Soat.Eleven.FastFood.Core.Interfaces.Services;
 
 namespace Soat.Eleven.FastFood.Api.Controllers
 {
@@ -13,12 +15,15 @@ namespace Soat.Eleven.FastFood.Api.Controllers
     {
         private readonly ILogger<PedidoRestEndpoints> _logger;
         private readonly IPedidoDataSource _pedidoDataSource;
+        private readonly IPagamentoService _pagamentoService;
 
         public PedidoRestEndpoints(ILogger<PedidoRestEndpoints> logger,
-                                   IPedidoDataSource pedidoDataSource)
+                                   IPedidoDataSource pedidoDataSource,
+                                   IPagamentoService pagamentoService)
         {
             _logger = logger;
             _pedidoDataSource = pedidoDataSource;
+            _pagamentoService = pagamentoService;
         }
 
         [HttpPost]
@@ -27,9 +32,9 @@ namespace Soat.Eleven.FastFood.Api.Controllers
         {
             try
             {
-                var controller = new PedidoController(_pedidoDataSource);
+                var controller = new PedidoController(_pedidoDataSource, _pagamentoService);
                 var pedidoCriado = await controller.CriarPedido(pedidoDto);
-                return CreatedAtAction(nameof(CriarPedido), pedidoCriado);
+                return Ok(pedidoCriado);
             }
             catch (Exception ex)
             {
