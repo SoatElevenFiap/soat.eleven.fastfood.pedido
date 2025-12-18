@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Soat.Eleven.FastFood.Api.Controllers;
+using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Enums;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
+using Soat.Eleven.FastFood.Core.Interfaces.Services;
 using Xunit;
 
 namespace Soat.Eleven.FastFood.Tests.Api.Endpoints;
@@ -14,35 +16,76 @@ public class PedidoRestEndpointsTests
 {
     private readonly Mock<ILogger<PedidoRestEndpoints>> _loggerMock;
     private readonly Mock<IPedidoDataSource> _pedidoDataSourceMock;
+    private readonly Mock<IPagamentoService> _pagamentoServiceMock;
     private readonly PedidoRestEndpoints _endpoint;
 
     public PedidoRestEndpointsTests()
     {
         _loggerMock = new Mock<ILogger<PedidoRestEndpoints>>();
         _pedidoDataSourceMock = new Mock<IPedidoDataSource>();
-        _endpoint = new PedidoRestEndpoints(_loggerMock.Object, _pedidoDataSourceMock.Object);
+        _pagamentoServiceMock = new Mock<IPagamentoService>();
+        
+        _pedidoDataSourceMock
+            .Setup(x => x.GetClientId())
+            .Returns("test-client-id");
+
+        _endpoint = new PedidoRestEndpoints(
+            _loggerMock.Object,
+            _pedidoDataSourceMock.Object,
+            _pagamentoServiceMock.Object
+        );
     }
 
     #region CriarPedido Tests
 
     [Fact]
-    public async Task CriarPedido_DeveRetornarCreatedAtAction_QuandoSucesso()
+    public async Task CriarPedido_DeveRetornarOk_QuandoSucesso()
     {
         // Arrange
         var inputDto = CriarPedidoInputDtoValido();
         var outputDto = CriarPedidoOutputDtoValido(inputDto);
+        var pagamentoResponse = CriarOrdemPagamentoResponseValido();
 
         _pedidoDataSourceMock
             .Setup(x => x.AddAsync(It.IsAny<PedidoInputDto>()))
             .ReturnsAsync(outputDto);
 
+        _pagamentoServiceMock
+            .Setup(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()))
+            .ReturnsAsync(pagamentoResponse);
+
         // Act
         var resultado = await _endpoint.CriarPedido(inputDto);
 
         // Assert
-        resultado.Should().BeOfType<CreatedAtActionResult>();
-        var createdResult = resultado as CreatedAtActionResult;
-        createdResult!.Value.Should().NotBeNull();
+        resultado.Should().BeOfType<OkObjectResult>();
+        var okResult = resultado as OkObjectResult;
+        okResult!.Value.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task CriarPedido_DeveRetornarResponseComRedirectUrl_QuandoSucesso()
+    {
+        // Arrange
+        var inputDto = CriarPedidoInputDtoValido();
+        var outputDto = CriarPedidoOutputDtoValido(inputDto);
+        var pagamentoResponse = CriarOrdemPagamentoResponseValido();
+
+        _pedidoDataSourceMock
+            .Setup(x => x.AddAsync(It.IsAny<PedidoInputDto>()))
+            .ReturnsAsync(outputDto);
+
+        _pagamentoServiceMock
+            .Setup(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()))
+            .ReturnsAsync(pagamentoResponse);
+
+        // Act
+        var resultado = await _endpoint.CriarPedido(inputDto);
+
+        // Assert
+        var okResult = resultado as OkObjectResult;
+        var pedidoCriado = okResult!.Value as CriarPedidoOutputDto;
+        pedidoCriado!.RedirectUrl.Should().Be(pagamentoResponse.RedirectUrl);
     }
 
     [Fact]
@@ -62,6 +105,29 @@ public class PedidoRestEndpointsTests
         resultado.Should().BeOfType<ObjectResult>();
         var objectResult = resultado as ObjectResult;
         objectResult!.StatusCode.Should().Be(500);
+    }
+
+    [Fact]
+    public async Task CriarPedido_DeveChamarPagamentoService()
+    {
+        // Arrange
+        var inputDto = CriarPedidoInputDtoValido();
+        var outputDto = CriarPedidoOutputDtoValido(inputDto);
+        var pagamentoResponse = CriarOrdemPagamentoResponseValido();
+
+        _pedidoDataSourceMock
+            .Setup(x => x.AddAsync(It.IsAny<PedidoInputDto>()))
+            .ReturnsAsync(outputDto);
+
+        _pagamentoServiceMock
+            .Setup(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()))
+            .ReturnsAsync(pagamentoResponse);
+
+        // Act
+        await _endpoint.CriarPedido(inputDto);
+
+        // Assert
+        _pagamentoServiceMock.Verify(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()), Times.Once);
     }
 
     #endregion
@@ -448,6 +514,19 @@ public class PedidoRestEndpointsTests
                 PrecoUnitario = i.PrecoUnitario,
                 DescontoUnitario = i.DescontoUnitario
             }).ToList()
+        };
+    }
+
+    private static OrdemPagamentoResponse CriarOrdemPagamentoResponseValido()
+    {
+        return new OrdemPagamentoResponse
+        {
+            Id = Guid.NewGuid().ToString(),
+            PedidoId = Guid.NewGuid(),
+            Valor = 25.00m,
+            Status = "pending",
+            RedirectUrl = "https://pagamento.com/redirect",
+            CreatedAt = DateTime.Now
         };
     }
 

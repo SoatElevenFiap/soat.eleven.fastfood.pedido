@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Soat.Eleven.FastFood.Adapter.Infra.DataSources;
 using Soat.Eleven.FastFood.Application.Controllers;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
@@ -17,6 +19,7 @@ public class PedidoControllerIntegrationTests : IDisposable
     private readonly AppDbContext _context;
     private readonly PedidoDataSource _dataSource;
     private readonly PedidoController _controller;
+    private readonly Mock<IConfiguration> _configurationMock;
 
     public PedidoControllerIntegrationTests()
     {
@@ -25,7 +28,9 @@ public class PedidoControllerIntegrationTests : IDisposable
             .Options;
 
         _context = new AppDbContext(options);
-        _dataSource = new PedidoDataSource(_context);
+        _configurationMock = new Mock<IConfiguration>();
+        _configurationMock.Setup(x => x["PagamentoService:ClientId"]).Returns("test-client-id");
+        _dataSource = new PedidoDataSource(_context, _configurationMock.Object);
         _controller = new PedidoController(_dataSource);
     }
 

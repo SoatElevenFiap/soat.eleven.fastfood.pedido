@@ -1,10 +1,12 @@
 using FluentAssertions;
 using Moq;
 using Soat.Eleven.FastFood.Application.Controllers;
+using Soat.Eleven.FastFood.Core.DTOs.Pagamentos;
 using Soat.Eleven.FastFood.Core.DTOs.Pedidos;
 using Soat.Eleven.FastFood.Core.Entities;
 using Soat.Eleven.FastFood.Core.Enums;
 using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
+using Soat.Eleven.FastFood.Core.Interfaces.Services;
 using Xunit;
 
 namespace Soat.Eleven.FastFood.Tests.Application;
@@ -12,18 +14,31 @@ namespace Soat.Eleven.FastFood.Tests.Application;
 public class PedidoControllerTests
 {
     private readonly Mock<IPedidoDataSource> _pedidoDataSourceMock;
+    private readonly Mock<IPagamentoService> _pagamentoServiceMock;
     private readonly PedidoController _controller;
+    private readonly PedidoController _controllerWithPayment;
+    private const string ClientId = "test-client-id";
 
     public PedidoControllerTests()
     {
         _pedidoDataSourceMock = new Mock<IPedidoDataSource>();
+        _pagamentoServiceMock = new Mock<IPagamentoService>();
+        
+        _pedidoDataSourceMock
+            .Setup(x => x.GetClientId())
+            .Returns(ClientId);
+        
         _controller = new PedidoController(_pedidoDataSourceMock.Object);
+        _controllerWithPayment = new PedidoController(
+            _pedidoDataSourceMock.Object,
+            _pagamentoServiceMock.Object
+        );
     }
 
     #region CriarPedido Tests
 
     [Fact]
-    public async Task CriarPedido_DeveRetornarPedidoOutputDto_QuandoDadosValidos()
+    public async Task CriarPedido_DeveRetornarCriarPedidoOutputDto_QuandoDadosValidos()
     {
         // Arrange
         var inputDto = CriarPedidoInputDtoValido();
@@ -39,7 +54,33 @@ public class PedidoControllerTests
         // Assert
         resultado.Should().NotBeNull();
         resultado.TokenAtendimentoId.Should().Be(inputDto.TokenAtendimentoId);
+        resultado.RedirectUrl.Should().BeNull();
         _pedidoDataSourceMock.Verify(x => x.AddAsync(It.IsAny<PedidoInputDto>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CriarPedido_DeveRetornarRedirectUrl_QuandoPagamentoServiceConfigurado()
+    {
+        // Arrange
+        var inputDto = CriarPedidoInputDtoValido();
+        var outputDto = CriarPedidoOutputDtoValido(inputDto);
+        var pagamentoResponse = CriarOrdemPagamentoResponseValido();
+
+        _pedidoDataSourceMock
+            .Setup(x => x.AddAsync(It.IsAny<PedidoInputDto>()))
+            .ReturnsAsync(outputDto);
+
+        _pagamentoServiceMock
+            .Setup(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()))
+            .ReturnsAsync(pagamentoResponse);
+
+        // Act
+        var resultado = await _controllerWithPayment.CriarPedido(inputDto);
+
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.RedirectUrl.Should().Be(pagamentoResponse.RedirectUrl);
+        _pagamentoServiceMock.Verify(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()), Times.Once);
     }
 
     [Fact]
@@ -58,6 +99,34 @@ public class PedidoControllerTests
 
         // Assert
         _pedidoDataSourceMock.Verify(x => x.AddAsync(It.IsAny<PedidoInputDto>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CriarPedido_DeveCriarOrdemPagamentoComDadosCorretos_QuandoPagamentoServiceConfigurado()
+    {
+        // Arrange
+        var inputDto = CriarPedidoInputDtoValido();
+        var outputDto = CriarPedidoOutputDtoValido(inputDto);
+        var pagamentoResponse = CriarOrdemPagamentoResponseValido();
+
+        _pedidoDataSourceMock
+            .Setup(x => x.AddAsync(It.IsAny<PedidoInputDto>()))
+            .ReturnsAsync(outputDto);
+
+        _pagamentoServiceMock
+            .Setup(x => x.CriarOrdemPagamentoAsync(It.IsAny<CriarOrdemPagamentoRequest>()))
+            .ReturnsAsync(pagamentoResponse);
+
+        // Act
+        await _controllerWithPayment.CriarPedido(inputDto);
+
+        // Assert
+        _pagamentoServiceMock.Verify(x => x.CriarOrdemPagamentoAsync(
+            It.Is<CriarOrdemPagamentoRequest>(r =>
+                r.ClientId == ClientId &&
+                r.EndToEndId == outputDto.Id.ToString() &&
+                r.Items.Count == outputDto.Itens.Count
+            )), Times.Once);
     }
 
     #endregion
@@ -426,6 +495,19 @@ public class PedidoControllerTests
                 PrecoUnitario = i.PrecoUnitario,
                 DescontoUnitario = i.DescontoUnitario
             }).ToList()
+        };
+    }
+
+    private static OrdemPagamentoResponse CriarOrdemPagamentoResponseValido()
+    {
+        return new OrdemPagamentoResponse
+        {
+            Id = Guid.NewGuid().ToString(),
+            PedidoId = Guid.NewGuid(),
+            Valor = 25.00m,
+            Status = "pending",
+            RedirectUrl = "https://pagamento.com/redirect",
+            CreatedAt = DateTime.Now
         };
     }
 

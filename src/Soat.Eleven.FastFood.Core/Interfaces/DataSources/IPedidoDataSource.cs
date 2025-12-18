@@ -11,4 +11,5 @@ public interface IPedidoDataSource
     Task<PedidoOutputDto?> GetByIdAsync(Guid id);
     Task UpdateAsync(PedidoInputDto pedido);
     Task AtualizarStatusAsync(Guid pedidoId, StatusPedido status);
+    string GetClientId();
 }
