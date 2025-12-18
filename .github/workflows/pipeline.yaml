@@ -88,4 +88,4 @@ jobs:
 
       # 11. End SonarCloud analysis
       - name: End SonarCloud analysis
-        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="SEU_TOKEN_AQUI"
+        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="b5085b06fff9f74ca8fb7ccf5746b5177ade3136"
