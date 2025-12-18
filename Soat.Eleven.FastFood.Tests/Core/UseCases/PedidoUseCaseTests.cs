@@ -8,7 +8,7 @@ using Soat.Eleven.FastFood.Core.Interfaces.DataSources;
 using Soat.Eleven.FastFood.Core.UseCases;
 using Xunit;
 
-namespace Soat.Eleven.FastFood.Tests.UseCases;
+namespace Soat.Eleven.FastFood.Tests.Core.UseCases;
 
 public class PedidoUseCaseTests
 {
