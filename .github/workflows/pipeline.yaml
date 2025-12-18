@@ -69,7 +69,8 @@ jobs:
             /o:"soatelevenfiap" \
             /d:sonar.token="b5085b06fff9f74ca8fb7ccf5746b5177ade3136" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
+            /d:sonar.exclusions="**/Migrations/**"
 
       # 9. Build project
       - name: Build project
