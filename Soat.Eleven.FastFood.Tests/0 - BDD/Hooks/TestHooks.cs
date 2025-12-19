@@ -1,6 +1,6 @@
 using TechTalk.SpecFlow;
 
-namespace Soat.Eleven.FastFood.Tests.Hooks;
+namespace Soat.Eleven.FastFood.Tests.BDD.Hooks;
 
 [Binding]
 public class TestHooks
