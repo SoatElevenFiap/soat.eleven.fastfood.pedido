@@ -1,4 +1,4 @@
-# FastFood Pedido - Microsserviço de Pedidos e Pagamentos
+# FastFood Pedido - Microsserviço de Pedidos
 
 ## Sobre o Projeto
 
