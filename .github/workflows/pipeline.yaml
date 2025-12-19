@@ -1,4 +1,4 @@
-name: Build and SonarCloud Analysis
+name: Build, Analyze and Deploy FastFood to AKS
 
 on:
   push:
@@ -9,9 +9,22 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  REGISTRY: acrfastfoodpostech.azurecr.io
+  APP_IMAGE_NAME: fastfood/app
+  MIGRATOR_IMAGE_NAME: fastfood/migrator
+  CHART_PATH: ./helm/fastfood-chart
+  RELEASE_NAME: fastfood-release
+  AKS_RESOURCE_GROUP: rg-fastfood-postech
+  AKS_CLUSTER_NAME: aks-fastfood-postech
+  NAMESPACE: fastfood
+
 jobs:
-  build-and-analyze:
+  build-analyze-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       # 1. Checkout do código com histórico completo para o SonarCloud
@@ -67,7 +80,7 @@ jobs:
           ./.sonar/scanner/dotnet-sonarscanner begin \
             /k:"SoatElevenFiap_soat.eleven.fastfood.pedido" \
             /o:"soatelevenfiap" \
-            /d:sonar.token="b5085b06fff9f74ca8fb7ccf5746b5177ade3136" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
             /d:sonar.exclusions="**/Migrations/**"
@@ -89,4 +102,110 @@ jobs:
 
       # 11. End SonarCloud analysis
       - name: End SonarCloud analysis
-        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="b5085b06fff9f74ca8fb7ccf5746b5177ade3136"
+        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      # ============================================
+      # DEPLOY TO AZURE (apenas na branch main)
+      # ============================================
+
+      # Variáveis necessárias:
+      # SONAR_TOKEN - Token do SonarCloud
+      # AZURE_CLIENT_ID - Client ID do Azure
+      # AZURE_TENANT_ID - Tenant ID do Azure
+      # AZURE_SUBSCRIPTION_ID - Subscription ID do Azure
+      # POSTGRES_HOST - Host do PostgreSQL
+      # POSTGRES_USER - Usuário do PostgreSQL
+      # POSTGRES_PASSWORD - Senha do PostgreSQL
+
+      # 12. Login no Azure usando OIDC
+      # - name: Azure Login
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # # 13. Login no ACR
+      # - name: Azure Container Registry Login
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: az acr login --name acrfastfoodpostech
+
+      # # 14. Build e push das imagens Docker (App + Migrator)
+      # - name: Build and push Docker images
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: |
+      #     docker build --target final -t $REGISTRY/$APP_IMAGE_NAME:latest .
+      #     docker push $REGISTRY/$APP_IMAGE_NAME:latest
+          
+      #     docker build --target migrator -t $REGISTRY/$MIGRATOR_IMAGE_NAME:latest .
+      #     docker push $REGISTRY/$MIGRATOR_IMAGE_NAME:latest
+
+      # # 15. Conectar no AKS
+      # - name: Get AKS credentials
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: |
+      #     rm -rf ~/.kube/config || true
+      #     az aks get-credentials \
+      #       --resource-group $AKS_RESOURCE_GROUP \
+      #       --name $AKS_CLUSTER_NAME \
+      #       --overwrite-existing \
+      #       --admin
+      #     kubectl cluster-info
+      #     kubectl get nodes
+
+      # # 16. Criar namespace se não existir
+      # - name: Create namespace
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+      # # 17. Setup Helm
+      # - name: Setup Helm
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   uses: azure/setup-helm@v3
+      #   with:
+      #     version: v3.15.1
+
+      # # 18. Executar Migration Job
+      # - name: Run Database Migration
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: |
+      #     kubectl delete job migrator -n $NAMESPACE --ignore-not-found=true
+      #     sleep 5
+          
+      #     helm template migrator-job $CHART_PATH \
+      #       --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME:latest \
+      #       --set image.repository=$REGISTRY/$APP_IMAGE_NAME:latest \
+      #       --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
+      #       --set credentials.user="${{ secrets.POSTGRES_USER }}" \
+      #       --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
+      #       --namespace $NAMESPACE \
+      #       --show-only templates/migrator-job.yaml \
+      #       --show-only templates/config-map.yaml \
+      #       --show-only templates/secret.yaml | kubectl apply -f -
+          
+      #     kubectl wait --for=condition=complete job/migrator -n $NAMESPACE --timeout=900s
+      #     kubectl logs job/migrator -n $NAMESPACE
+
+      # # 19. Deploy da aplicação
+      # - name: Deploy Application
+      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      #   run: |
+      #     # Criar secret para ACR
+      #     kubectl delete secret acr-secret -n $NAMESPACE --ignore-not-found=true
+      #     kubectl create secret docker-registry acr-secret \
+      #       --docker-server=$REGISTRY \
+      #       --docker-username=$(az acr credential show --name acrfastfoodpostech --query "username" -o tsv) \
+      #       --docker-password=$(az acr credential show --name acrfastfoodpostech --query "passwords[0].value" -o tsv) \
+      #       --namespace $NAMESPACE
+          
+      #     # Deploy usando Helm (upgrade ou install)
+      #     helm upgrade --install $RELEASE_NAME $CHART_PATH \
+      #       --set image.repository=$REGISTRY/$APP_IMAGE_NAME:latest \
+      #       --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME:latest \
+      #       --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
+      #       --set credentials.user="${{ secrets.POSTGRES_USER }}" \
+      #       --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
+      #       --namespace $NAMESPACE \
+      #       --wait \
+      #       --timeout=10m
