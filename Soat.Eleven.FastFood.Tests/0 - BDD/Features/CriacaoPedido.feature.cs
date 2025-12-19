@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Soat.Eleven.FastFood.Tests.Features
+namespace Soat.Eleven.FastFood.Tests.BDD.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -40,7 +40,7 @@ namespace Soat.Eleven.FastFood.Tests.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("pt-BR"), "Features", "Criação de Pedido", "    Como um cliente do fast food\r\n    Eu quero criar um pedido com itens\r\n    Par" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("pt-BR"), "BDD/Features", "Criação de Pedido", "    Como um cliente do fast food\r\n    Eu quero criar um pedido com itens\r\n    Par" +
                     "a que eu possa realizar minha compra", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }

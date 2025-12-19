@@ -9,7 +9,7 @@ using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using FluentAssertions;
 
-namespace Soat.Eleven.FastFood.Tests.StepDefinitions;
+namespace Soat.Eleven.FastFood.Tests.BDD.StepDefinitions;
 
 [Binding]
 public class CriacaoPedidoStepDefinitions
