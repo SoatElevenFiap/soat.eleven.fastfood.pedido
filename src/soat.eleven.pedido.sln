@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Adapter.Infra", "Soat.Eleven.FastFood.Infra\Soat.Eleven.Pedidos.Adapter.Infra.csproj", "{32D4B3AB-51EE-4F1C-9C35-C422BC4FAF56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Adapter.Infra", "Soat.Eleven.Pedidos.Infra\Soat.Eleven.Pedidos.Adapter.Infra.csproj", "{32D4B3AB-51EE-4F1C-9C35-C422BC4FAF56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Tests", "..\Soat.Eleven.FastFood.Tests\Soat.Eleven.Pedidos.Tests.csproj", "{29AA1569-107B-714A-B4C7-1805355E1415}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Tests", "..\Soat.Eleven.Pedidos.Tests\Soat.Eleven.Pedidos.Tests.csproj", "{29AA1569-107B-714A-B4C7-1805355E1415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Adapter.WebApi", "Soat.Eleven.FastFood.Api\Soat.Eleven.Pedidos.Adapter.WebApi.csproj", "{70205FCA-CF86-C235-47C7-8087B12AB14C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Adapter.WebApi", "Soat.Eleven.Pedidos.Api\Soat.Eleven.Pedidos.Adapter.WebApi.csproj", "{70205FCA-CF86-C235-47C7-8087B12AB14C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B9A5270A-A9F9-442D-8328-41DF6044186A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Core", "Soat.Eleven.FastFood.Core\Soat.Eleven.Pedidos.Core.csproj", "{577B1880-7283-4630-BAAD-14ED4226848B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Core", "Soat.Eleven.Pedidos.Core\Soat.Eleven.Pedidos.Core.csproj", "{577B1880-7283-4630-BAAD-14ED4226848B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Application", "Soat.Eleven.FastFood.Application\Soat.Eleven.Pedidos.Application.csproj", "{290DD6FC-9AED-45CB-BF1A-91783010096D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soat.Eleven.Pedidos.Application", "Soat.Eleven.Pedidos.Application\Soat.Eleven.Pedidos.Application.csproj", "{290DD6FC-9AED-45CB-BF1A-91783010096D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
