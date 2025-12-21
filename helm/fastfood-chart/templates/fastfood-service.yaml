@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: app
-  name: app-service
+  name: app-service-pedidos
   namespace: fastfood
 spec:
   ports:
