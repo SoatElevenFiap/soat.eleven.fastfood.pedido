@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Soat.Eleven.FastFood.Application\Soat.Eleven.FastFood.Application.csproj" />
-    <ProjectReference Include="..\Soat.Eleven.FastFood.Core\Soat.Eleven.FastFood.Core.csproj" />
-    <ProjectReference Include="..\Soat.Eleven.FastFood.Infra\Soat.Eleven.FastFood.Adapter.Infra.csproj" />
+    <ProjectReference Include="..\Soat.Eleven.FastFood.Application\Soat.Eleven.Pedidos.Application.csproj" />
+    <ProjectReference Include="..\Soat.Eleven.FastFood.Core\Soat.Eleven.Pedidos.Core.csproj" />
+    <ProjectReference Include="..\Soat.Eleven.FastFood.Infra\Soat.Eleven.Pedidos.Adapter.Infra.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

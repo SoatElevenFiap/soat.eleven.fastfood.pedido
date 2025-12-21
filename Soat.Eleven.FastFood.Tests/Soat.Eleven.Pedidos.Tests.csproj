@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Core\Soat.Eleven.FastFood.Core.csproj" />
-    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Application\Soat.Eleven.FastFood.Application.csproj" />
-    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Infra\Soat.Eleven.FastFood.Adapter.Infra.csproj" />
-    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Api\Soat.Eleven.FastFood.Adapter.WebApi.csproj" />
+    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Core\Soat.Eleven.Pedidos.Core.csproj" />
+    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Application\Soat.Eleven.Pedidos.Application.csproj" />
+    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Infra\Soat.Eleven.Pedidos.Adapter.Infra.csproj" />
+    <ProjectReference Include="..\src\Soat.Eleven.FastFood.Api\Soat.Eleven.Pedidos.Adapter.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

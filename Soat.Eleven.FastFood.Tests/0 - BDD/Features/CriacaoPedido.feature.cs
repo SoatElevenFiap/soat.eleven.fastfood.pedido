@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Soat.Eleven.FastFood.Tests.BDD.Features
+namespace Soat.Eleven.Pedidos.Tests._0_BDD.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -31,7 +31,7 @@ namespace Soat.Eleven.FastFood.Tests.BDD.Features
 #line 1 "CriacaoPedido.feature"
 #line hidden
         
-        public CriacaoDePedidoFeature(CriacaoDePedidoFeature.FixtureData fixtureData, Soat_Eleven_FastFood_Tests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public CriacaoDePedidoFeature(CriacaoDePedidoFeature.FixtureData fixtureData, Soat_Eleven_Pedidos_Tests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace Soat.Eleven.FastFood.Tests.BDD.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("pt-BR"), "BDD/Features", "Criação de Pedido", "    Como um cliente do fast food\r\n    Eu quero criar um pedido com itens\r\n    Par" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("pt-BR"), "0 - BDD/Features", "Criação de Pedido", "    Como um cliente do fast food\r\n    Eu quero criar um pedido com itens\r\n    Par" +
                     "a que eu possa realizar minha compra", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
