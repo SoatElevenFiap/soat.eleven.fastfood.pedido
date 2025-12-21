@@ -25,7 +25,7 @@ hpa:
 # Variáveis do Azure PostgreSQL
 postgres:
   host: "" # Será definido via --set no Helm
-  db: "fastfood" # Nome do DB
+  db: "pedidos" # Nome do DB
   port: "5432"
 
 # Configurações do Serviço de Pagamento
