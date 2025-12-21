@@ -1,10 +1,7 @@
-name: Build, Analyze and Deploy FastFood to AKS
+name: CD - Deploy FastFood to AKS
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -20,96 +17,28 @@ env:
   NAMESPACE: fastfood
 
 jobs:
-  build-analyze-deploy:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
 
     steps:
-      # 1. Checkout do código com histórico completo para o SonarCloud
+      # 1. Checkout do código
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2. Setup .NET
+      # 2. Setup .NET (necessário para build das imagens)
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Setup Java (necessário para o SonarCloud Scanner)
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      # 4. Cache SonarCloud packages
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~/sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      # 5. Cache SonarCloud scanner
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: ./.sonar/scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      # 6. Install SonarCloud scanner
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ./.sonar/scanner
-          dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
-
-      # 7. Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore src/soat.eleven.pedido.sln
-
-      # 8. Begin SonarCloud analysis
-      - name: Begin SonarCloud analysis
-        run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin \
-            /k:"SoatElevenFiap_soat.eleven.fastfood.pedido" \
-            /o:"soatelevenfiap" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.exclusions="**/Migrations/**"
-
-      # 9. Build project
-      - name: Build project
-        run: dotnet build src/soat.eleven.pedido.sln --configuration Release --no-restore
-
-      # 10. Run tests with coverage
-      - name: Run tests
-        run: |
-          dotnet test src/soat.eleven.pedido.sln \
-            --no-build \
-            --configuration Release \
-            --verbosity normal \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./coverage \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-
-      # 11. End SonarCloud analysis
-      - name: End SonarCloud analysis
-        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
       # ============================================
-      # DEPLOY TO AZURE (apenas na branch main)
+      # DEPLOY TO AZURE
       # ============================================
 
       # Variáveis necessárias:
-      # SONAR_TOKEN - Token do SonarCloud
       # AZURE_CLIENT_ID - Client ID do Azure
       # AZURE_TENANT_ID - Tenant ID do Azure
       # AZURE_SUBSCRIPTION_ID - Subscription ID do Azure
@@ -117,23 +46,23 @@ jobs:
       # POSTGRES_USER - Usuário do PostgreSQL
       # POSTGRES_PASSWORD - Senha do PostgreSQL
 
-      # 12. Login no Azure usando OIDC
+      - name: Deploy to Azure AKS
+        run: echo "Nesse ponto será feito o deploy para o AKS usando as etapas comentadas abaixo."
+
+      # 3. Login no Azure usando OIDC
       # - name: Azure Login
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   uses: azure/login@v2
       #   with:
       #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
       #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
       #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # # 13. Login no ACR
+      # # 4. Login no ACR
       # - name: Azure Container Registry Login
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: az acr login --name acrfastfoodpostech
 
-      # # 14. Build e push das imagens Docker (App + Migrator)
+      # # 5. Build e push das imagens Docker (App + Migrator)
       # - name: Build and push Docker images
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: |
       #     docker build --target final -t $REGISTRY/$APP_IMAGE_NAME:latest .
       #     docker push $REGISTRY/$APP_IMAGE_NAME:latest
@@ -141,9 +70,8 @@ jobs:
       #     docker build --target migrator -t $REGISTRY/$MIGRATOR_IMAGE_NAME:latest .
       #     docker push $REGISTRY/$MIGRATOR_IMAGE_NAME:latest
 
-      # # 15. Conectar no AKS
+      # # 6. Conectar no AKS
       # - name: Get AKS credentials
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: |
       #     rm -rf ~/.kube/config || true
       #     az aks get-credentials \
@@ -154,21 +82,18 @@ jobs:
       #     kubectl cluster-info
       #     kubectl get nodes
 
-      # # 16. Criar namespace se não existir
+      # # 7. Criar namespace se não existir
       # - name: Create namespace
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
-      # # 17. Setup Helm
+      # # 8. Setup Helm
       # - name: Setup Helm
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   uses: azure/setup-helm@v3
       #   with:
       #     version: v3.15.1
 
-      # # 18. Executar Migration Job
+      # # 9. Executar Migration Job
       # - name: Run Database Migration
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: |
       #     kubectl delete job migrator -n $NAMESPACE --ignore-not-found=true
       #     sleep 5
@@ -187,9 +112,8 @@ jobs:
       #     kubectl wait --for=condition=complete job/migrator -n $NAMESPACE --timeout=900s
       #     kubectl logs job/migrator -n $NAMESPACE
 
-      # # 19. Deploy da aplicação
+      # # 10. Deploy da aplicação
       # - name: Deploy Application
-      #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       #   run: |
       #     # Criar secret para ACR
       #     kubectl delete secret acr-secret -n $NAMESPACE --ignore-not-found=true
