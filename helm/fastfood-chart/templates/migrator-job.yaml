@@ -1,16 +1,16 @@
-{{- if not (lookup "batch/v1" "Job" .Release.Namespace "migrator-pedidos") -}}
+{{- if not (lookup "batch/v1" "Job" .Release.Namespace "pedidos-migrator") -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
-    app: migrator
+    app: pedidos-migrator
   name: pedidos-migrator
   namespace: fastfood
 spec:
   template:
     metadata:
       labels:
-        app: migrator
+        app: pedidos-migrator
     spec:
       restartPolicy: OnFailure
       imagePullSecrets: 

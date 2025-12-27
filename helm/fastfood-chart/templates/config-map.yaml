@@ -1,4 +1,4 @@
-{{- if not (lookup "v1" "ConfigMap" .Release.Namespace "fastfood-config") -}}
+{{- if not (lookup "v1" "ConfigMap" .Release.Namespace "pedidos-config") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
