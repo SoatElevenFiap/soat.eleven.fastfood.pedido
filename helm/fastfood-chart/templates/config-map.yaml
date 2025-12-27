@@ -1,9 +1,10 @@
-{{- if not (lookup "v1" "ConfigMap" .Release.Namespace "fastfood-config") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pedidos-config
-  namespace: {{ .Release.Namespace }} 
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/resource-policy: keep
 data:
   POSTGRES_HOST: "{{ .Values.postgres.host }}" # <--- APONTA PARA O AZURE DB
   POSTGRES_DB_PEDIDOS : "{{ .Values.postgres.db }}"
@@ -12,4 +13,3 @@ data:
   ASPNETCORE_URLS: "http://+:80"
   PAGAMENTO_CLIENT_ID: "{{ .Values.pagamento.clientId }}"
   PAGAMENTO_BASE_URL: "{{ .Values.pagamento.baseUrl }}"
-{{- end -}}
