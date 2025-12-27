@@ -126,12 +126,15 @@ O projeto mantém uma **cobertura de testes superior a 90%**, garantindo que a m
 ### Visualização da Cobertura
 
 ![BDD](.docs/images/bdd.png)
+
 *Execução dos testes BDD utilizando SpecFlow, demonstrando os cenários de comportamento da aplicação.*
 
 ![Cobertura de Testes](.docs/images/unitTests.png)
+
 *Relatório de cobertura dos testes de unidade mostrando a porcentagem de código testado por camada da aplicação.*
 
 ![Sonar Scan Coverage](.docs/images/sonar.png)
+
 *Análise de qualidade e cobertura de código realizada pelo SonarCloud, evidenciando métricas de confiabilidade e manutenibilidade.*
 
 ---
