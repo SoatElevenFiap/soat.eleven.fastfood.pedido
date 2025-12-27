@@ -103,9 +103,10 @@ jobs:
             --show-only templates/migrator-job.yaml \
             --show-only templates/config-map.yaml \
             --show-only templates/secret.yaml | kubectl apply -f -
-        
-          echo "⏳ Aguardando migração finalizar...
-          kubectl wait --for=condition=complete job/pedidos-migrator -n $NAMESPACE --timeout=300s
+          
+          echo "⏳ Aguardando migração finalizar..."
+          kubectl wait --for=condition=complete job/migrator-pedidos -n $NAMESPACE --timeout=300s
+          
       # 8. Deploy da Aplicação (Com rollback automático)
       - name: Deploy Application via Helm
         env:

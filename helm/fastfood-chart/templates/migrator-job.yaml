@@ -27,17 +27,17 @@ spec:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: pedidos-config
+                  name: fastfood-config
                   key: POSTGRES_HOST
             - name: POSTGRES_DB_PEDIDOS
               valueFrom:
                 configMapKeyRef:
-                  name: pedidos-config
+                  name: fastfood-config
                   key: POSTGRES_DB_PEDIDOS
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: pedidos-config
+                  name: fastfood-config
                   key: POSTGRES_PORT
             - name: POSTGRES_USER
               valueFrom:
