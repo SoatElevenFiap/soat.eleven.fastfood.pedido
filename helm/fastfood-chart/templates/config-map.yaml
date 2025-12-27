@@ -9,5 +9,5 @@ data:
   POSTGRES_PORT: "{{ .Values.postgres.port }}"
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:80"
-  PAGAMENTO_CLIENT_ID: "{{ .Values.pagamento.clientId }}"
-  PAGAMENTO_BASE_URL: "{{ .Values.pagamento.baseUrl }}"
+  # PAGAMENTO_CLIENT_ID: "{{ .Values.pagamento.clientId }}"
+  # PAGAMENTO_BASE_URL: "{{ .Values.pagamento.baseUrl }}"
