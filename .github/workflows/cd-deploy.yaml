@@ -122,14 +122,13 @@ jobs:
           
           # Upgrade Atômico (Se falhar, desfaz tudo)
           helm upgrade --install $RELEASE_NAME $CHART_PATH \
-            --set image.repository=$REGISTRY/$APP_IMAGE_NAME \
-            --set image.tag=$IMAGE_TAG \
-            --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME \
-            --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
-            --set postgres.db="${{ secrets.POSTGRES_DB_PEDIDOS }}" \
-            --set credentials.user="${{ secrets.POSTGRES_USER }}" \
-            --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
             --namespace $NAMESPACE \
             --create-namespace \
-            --atomic \
-            --timeout 5m
+            --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
+            --set postgres.db="${{ secrets.POSTGRES_DB }}" \
+            --set postgres.port="5432" \
+            --set credentials.user="${{ secrets.POSTGRES_USER }}" \
+            --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
+            --set image.repository=$REGISTRY/$APP_IMAGE_NAME \
+            --set image.tag=${{ github.sha }} \
+            --atomic
