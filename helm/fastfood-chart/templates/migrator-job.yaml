@@ -1,3 +1,4 @@
+{{- if not (lookup "batch/v1" "Job" .Release.Namespace "migrator-pedidos") -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -64,3 +65,4 @@ spec:
           image: "{{ .Values.image.migratorRepository }}"
           name: migrator
           imagePullPolicy: IfNotPresent
+{{- end -}}

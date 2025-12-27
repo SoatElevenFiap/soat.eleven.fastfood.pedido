@@ -1,3 +1,4 @@
+{{- if not (lookup "v1" "ConfigMap" .Release.Namespace "fastfood-config") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,3 +12,4 @@ data:
   ASPNETCORE_URLS: "http://+:80"
   PAGAMENTO_CLIENT_ID: "{{ .Values.pagamento.clientId }}"
   PAGAMENTO_BASE_URL: "{{ .Values.pagamento.baseUrl }}"
+{{- end -}}
