@@ -82,7 +82,7 @@ jobs:
             --docker-password=$(az acr credential show --name acrfastfoodpostech --query "passwords[0].value" -o tsv) \
             --namespace $NAMESPACE \
             --dry-run=client -o yaml | kubectl apply -f -
-              
+
       # 7. Executar Migration Job
       - name: Run Database Migration
         env:
@@ -96,6 +96,7 @@ jobs:
             --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME \
             --set image.tag=$IMAGE_TAG \
             --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
+            --set postgres.db="${{ secrets.POSTGRES_DB }}" \
             --set credentials.user="${{ secrets.POSTGRES_USER }}" \
             --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
             --namespace $NAMESPACE \
