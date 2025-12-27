@@ -112,7 +112,13 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Atualiza/Cria secret do ACR para o K8s puxar a imagem
+          echo "🧹 Removendo releases e recursos órfãos anteriores..."
+          helm uninstall pedidos-release -n $NAMESPACE --ignore-not-found || true
+          helm uninstall fastfood-release -n $NAMESPACE --ignore-not-found || true
+          kubectl delete configmap pedidos-config -n $NAMESPACE --ignore-not-found || true
+          kubectl delete configmap fastfood-config -n $NAMESPACE --ignore-not-found || true
+          
+          echo "🔐 Atualiza/Cria secret do ACR para o K8s puxar a imagem..."
           kubectl create secret docker-registry acr-secret \
             --docker-server=$REGISTRY \
             --docker-username=$(az acr credential show --name acrfastfoodpostech --query "username" -o tsv) \
@@ -120,7 +126,7 @@ jobs:
             --namespace $NAMESPACE \
             --dry-run=client -o yaml | kubectl apply -f -
           
-          # Upgrade Atômico (Se falhar, desfaz tudo)
+          echo "🚀 Deploy Atômico com Helm..."
           helm upgrade --install $RELEASE_NAME $CHART_PATH \
             --namespace $NAMESPACE \
             --create-namespace \

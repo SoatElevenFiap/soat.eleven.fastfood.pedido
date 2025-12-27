@@ -3,8 +3,6 @@ kind: ConfigMap
 metadata:
   name: pedidos-config
   namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/resource-policy: keep
 data:
   POSTGRES_HOST: "{{ .Values.postgres.host }}" # <--- APONTA PARA O AZURE DB
   POSTGRES_DB_PEDIDOS : "{{ .Values.postgres.db }}"
