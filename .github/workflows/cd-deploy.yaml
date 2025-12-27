@@ -96,7 +96,7 @@ jobs:
             --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME \
             --set image.tag=$IMAGE_TAG \
             --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
-            --set postgres.db="${{ secrets.POSTGRES_DB }}" \
+            --set postgres.db="${{ secrets.POSTGRES_DB_PEDIDOS }}" \
             --set credentials.user="${{ secrets.POSTGRES_USER }}" \
             --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
             --namespace $NAMESPACE \
@@ -126,6 +126,7 @@ jobs:
             --set image.tag=$IMAGE_TAG \
             --set image.migratorRepository=$REGISTRY/$MIGRATOR_IMAGE_NAME \
             --set postgres.host="${{ secrets.POSTGRES_HOST }}" \
+            --set postgres.db="${{ secrets.POSTGRES_DB_PEDIDOS }}" \
             --set credentials.user="${{ secrets.POSTGRES_USER }}" \
             --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
             --namespace $NAMESPACE \
