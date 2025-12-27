@@ -4,7 +4,7 @@ metadata:
   labels:
     app: pedidos
   name: pedidos
-  namespace: fastfood
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -34,27 +34,27 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: ASPNETCORE_ENVIRONMENT
             - name: ASPNETCORE_URLS
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: ASPNETCORE_URLS
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: POSTGRES_HOST
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
-                  key: POSTGRES_DB
+                  name: pedidos-config
+                  key: POSTGRES_DB_PEDIDOS
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: POSTGRES_PORT
             - name: POSTGRES_USER
               valueFrom:
@@ -69,12 +69,12 @@ spec:
             - name: PagamentoService__ClientId
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: PAGAMENTO_CLIENT_ID
             - name: PagamentoService__BaseUrl
               valueFrom:
                 configMapKeyRef:
-                  name: fastfood-config
+                  name: pedidos-config
                   key: PAGAMENTO_BASE_URL
             - name: ConnectionStrings__PostgresConnectionString
               value: "Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true"

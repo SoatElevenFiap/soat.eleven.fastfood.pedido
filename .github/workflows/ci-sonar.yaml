@@ -3,7 +3,7 @@ name: CI - Build, Test and SonarCloud Analysis
 on:
   pull_request:
     branches:
-      - main
+      - testeDeploy
   workflow_dispatch:
 
 jobs:
