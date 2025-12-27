@@ -5,7 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Soat.Eleven.FastFood.Pedidos.Api.Configuration;
 
-[ExcludeFromCodeCoverage]
+[SuppressMessage(
+    "Security",
+    "S4502",
+    Justification = "Configuração de acesso ao Azure Key Vault"
+)]
 public static class KeyVaultConfiguration
 {
     public static WebApplicationBuilder ConfigureKeyVault(this WebApplicationBuilder builder)
