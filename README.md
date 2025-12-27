@@ -1,5 +1,21 @@
 # FastFood Pedido - Microsserviço de Pedidos
 
+## Índice
+
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Testes BDD](#testes-bdd-behavior-driven-development)
+- [Testes de Unidade](#testes-de-unidade)
+  - [Cobertura de Código](#cobertura-de-código)
+- [Deploy e Infraestrutura](#deploy-e-infraestrutura)
+- [Pré-requisitos](#pré-requisitos)
+- [Como Executar Localmente](#como-executar-localmente)
+- [Executando os Testes](#executando-os-testes)
+- [Arquitetura](#arquitetura)
+
+---
+
 ## Sobre o Projeto
 
 Este repositório contém o **microsserviço de Pedidos e Pagamentos** da solução **FastFood**, uma aplicação desenvolvida para lanchonetes de fast food como parte do projeto de pós-graduação em **Arquitetura de Software** da **FIAP**.
@@ -98,7 +114,7 @@ O projeto possui uma ampla cobertura de **testes de unidade** distribuídos nas 
 - **FluentAssertions** - Assertions fluentes para testes mais legíveis
 - **Bogus** - Geração de dados fake para testes
 
-### Cobertura de Código
+### <a id="cobertura-de-código"></a>Cobertura de Código
 
 O projeto mantém uma **cobertura de testes superior a 90%**, garantindo que a maior parte do código esteja coberta por testes automatizados. Esta cobertura abrange:
 
