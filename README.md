@@ -87,6 +87,35 @@ Os testes BDD permitem descrever o comportamento esperado do sistema em uma ling
 
 ---
 
+## Testes de Unidade
+
+O projeto possui uma ampla cobertura de **testes de unidade** distribuídos nas camadas da aplicação, garantindo a qualidade e confiabilidade do código.
+
+### Tecnologias e Ferramentas
+
+- **xUnit** - Framework de testes unitários para .NET
+- **Moq** - Biblioteca para criação de mocks e stubs
+- **FluentAssertions** - Assertions fluentes para testes mais legíveis
+- **Bogus** - Geração de dados fake para testes
+
+### Cobertura de Código
+
+O projeto mantém uma **cobertura de testes superior a 90%**, garantindo que a maior parte do código esteja coberta por testes automatizados. Esta cobertura abrange:
+
+- Testes da camada de **API** - Validação de endpoints e configurações
+- Testes da camada de **Application** - Validação dos controllers e orquestração
+- Testes da camada de **Core** - Validação de entidades, casos de uso e regras de negócio
+- Testes da camada de **Infra** - Validação de repositórios, gateways e serviços
+
+### Visualização da Cobertura
+![BDD](.docs/images/bdd.png)
+![Cobertura de Testes](.docs/images/unitTests.png)
+![Sonar Scan Coverage](.docs/images/sonar.png)
+
+*A imagem acima demonstra a cobertura detalhada dos testes por camada da aplicação.*
+
+---
+
 ## Deploy e Infraestrutura
 
 ### Docker
