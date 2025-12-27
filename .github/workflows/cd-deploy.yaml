@@ -71,10 +71,18 @@ jobs:
       # 6. Validação do Chart (Segurança extra antes de aplicar)
       - name: Helm Lint
         run: helm lint $CHART_PATH
-        
+
       - name: Create Namespace
         run: kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-
+      - name: Create ACR Secret
+        run: |
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=$REGISTRY \
+            --docker-username=$(az acr credential show --name acrfastfoodpostech --query "username" -o tsv) \
+            --docker-password=$(az acr credential show --name acrfastfoodpostech --query "passwords[0].value" -o tsv) \
+            --namespace $NAMESPACE \
+            --dry-run=client -o yaml | kubectl apply -f -
+              
       # 7. Executar Migration Job
       - name: Run Database Migration
         env:
