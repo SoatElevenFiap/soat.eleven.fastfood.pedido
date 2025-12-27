@@ -32,7 +32,7 @@ spec:
               echo "=== Connection String (mascarada) ==="
               echo "Host=$POSTGRES_HOST;Port=$POSTGRES_PORT;Database=$POSTGRES_DB_PEDIDOS;Username=$POSTGRES_USER;Password=[MASKED];SslMode=Require;TrustServerCertificate=true"
               echo "=== Iniciando Migration ==="
-              dotnet ef database update --connection 'Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB_PEDIDOS);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true' --project src/Soat.Eleven.FastFood.Infra/Soat.Eleven.FastFood.Adapter.Infra.csproj --startup-project src/Soat.Eleven.FastFood.Api/Soat.Eleven.FastFood.Adapter.WebApi.csproj
+              dotnet ef database update --connection 'Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB_PEDIDOS);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true' --project src/Soat.Eleven.Pedidos.Infra/Soat.Eleven.Pedidos.Adapter.Infra.csproj --startup-project src/Soat.Eleven.Pedidos.Api/Soat.Eleven.Pedidos.Adapter.WebApi.csproj
           env:
             - name: POSTGRES_HOST
               valueFrom:
