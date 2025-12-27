@@ -72,8 +72,6 @@ spec:
                 configMapKeyRef:
                   name: fastfood-config
                   key: PAGAMENTO_CLIENT_ID
-            - name: SECRET_KEY_PASSWORK
-              value: {{ .Values.app.secretKey | quote }}
             - name: PagamentoService__BaseUrl
               valueFrom:
                 configMapKeyRef:
