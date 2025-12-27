@@ -62,5 +62,6 @@ spec:
             - name: ConnectionStrings__PostgresConnectionString
               value: "Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true"
           image: "{{ .Values.image.migratorRepository }}"
+          tag: "{{ .Values.image.migratorTag }}"
           name: migrator
           imagePullPolicy: IfNotPresent
