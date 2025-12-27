@@ -4,7 +4,7 @@ metadata:
   labels:
     app: pedidos
   name: app-service-pedidos
-  namespace: fastfood
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
     - protocol: TCP

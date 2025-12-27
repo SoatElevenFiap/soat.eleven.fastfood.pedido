@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: pedidos-ingress
-  namespace: fastfood
+  namespace: {{ .Release.Namespace }}
   annotations:
     appgw.ingress.kubernetes.io/backend-path-prefix: "/"
     appgw.ingress.kubernetes.io/use-private-ip: "false"

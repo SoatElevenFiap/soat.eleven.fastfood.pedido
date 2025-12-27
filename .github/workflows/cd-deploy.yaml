@@ -3,7 +3,7 @@ name: CD - Deploy FastFood to AKS
 on:
   push:
     branches:
-      - main
+      - testeDeploy
   workflow_dispatch:
 
 env:
@@ -88,8 +88,8 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "🧹 Limpando job anterior..."
-          kubectl delete job migrator-pedidos -n $NAMESPACE --ignore-not-found=true
+          echo "🧹 Limpando jobs anteriores..."
+          kubectl delete jobs -l app=migrator-pedidos -n $NAMESPACE --ignore-not-found=true
           
           echo "🚀 Renderizando e aplicando Job de Migração..."
           helm template migrator-job $CHART_PATH \
@@ -105,14 +105,20 @@ jobs:
             --show-only templates/secret.yaml | kubectl apply -f -
           
           echo "⏳ Aguardando migração finalizar..."
-          kubectl wait --for=condition=complete job/migrator-pedidos -n $NAMESPACE --timeout=300s
+          kubectl wait --for=condition=complete job -l app=migrator-pedidos -n $NAMESPACE --timeout=300s
           
       # 8. Deploy da Aplicação (Com rollback automático)
       - name: Deploy Application via Helm
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Atualiza/Cria secret do ACR para o K8s puxar a imagem
+          echo "🧹 Removendo releases e recursos órfãos anteriores..."
+          helm uninstall pedidos-release -n $NAMESPACE --ignore-not-found || true
+          helm uninstall fastfood-release -n $NAMESPACE --ignore-not-found || true
+          kubectl delete configmap pedidos-config -n $NAMESPACE --ignore-not-found || true
+          kubectl delete configmap fastfood-config -n $NAMESPACE --ignore-not-found || true
+          
+          echo "🔐 Atualiza/Cria secret do ACR para o K8s puxar a imagem..."
           kubectl create secret docker-registry acr-secret \
             --docker-server=$REGISTRY \
             --docker-username=$(az acr credential show --name acrfastfoodpostech --query "username" -o tsv) \
@@ -120,7 +126,7 @@ jobs:
             --namespace $NAMESPACE \
             --dry-run=client -o yaml | kubectl apply -f -
           
-          # Upgrade Atômico (Se falhar, desfaz tudo)
+          echo "🚀 Deploy Atômico com Helm..."
           helm upgrade --install $RELEASE_NAME $CHART_PATH \
             --namespace $NAMESPACE \
             --create-namespace \
