@@ -33,14 +33,18 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "paid" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "paid",
+            EndToEndId = pedidoId.ToString()
+        };
 
         _pedidoDataSourceMock
             .Setup(x => x.AtualizarStatusAsync(pedidoId, StatusPedido.Recebido))
             .Returns(Task.CompletedTask);
 
         // Act
-        var resultado = await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        var resultado = await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         resultado.Should().BeOfType<OkResult>();
@@ -51,14 +55,18 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "paid" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "paid",
+            EndToEndId = pedidoId.ToString()
+        };
 
         _pedidoDataSourceMock
             .Setup(x => x.AtualizarStatusAsync(It.IsAny<Guid>(), It.IsAny<StatusPedido>()))
             .ThrowsAsync(new Exception("Erro simulado"));
 
         // Act
-        var resultado = await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        var resultado = await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         resultado.Should().BeOfType<ObjectResult>();
@@ -71,14 +79,18 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "paid" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "paid",
+            EndToEndId = pedidoId.ToString()
+        };
 
         _pedidoDataSourceMock
             .Setup(x => x.AtualizarStatusAsync(pedidoId, StatusPedido.Recebido))
             .Returns(Task.CompletedTask);
 
         // Act
-        await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         _pedidoDataSourceMock.Verify(x => x.AtualizarStatusAsync(pedidoId, StatusPedido.Recebido), Times.Once);
@@ -89,14 +101,18 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "failed" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "failed",
+            EndToEndId = pedidoId.ToString()
+        };
 
         _pedidoDataSourceMock
             .Setup(x => x.AtualizarStatusAsync(pedidoId, StatusPedido.Cancelado))
             .Returns(Task.CompletedTask);
 
         // Act
-        await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         _pedidoDataSourceMock.Verify(x => x.AtualizarStatusAsync(pedidoId, StatusPedido.Cancelado), Times.Once);
@@ -107,10 +123,14 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "pending" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "pending",
+            EndToEndId = pedidoId.ToString()
+        };
 
         // Act
-        var resultado = await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        var resultado = await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         resultado.Should().BeOfType<OkResult>();
@@ -122,10 +142,14 @@ public class PagamentoRestEndpointTests
     {
         // Arrange
         var pedidoId = Guid.NewGuid();
-        var notificacao = new ConfirmacaoPagamento { Status = "unknown" };
+        var notificacao = new ConfirmacaoPagamento 
+        { 
+            Status = "unknown",
+            EndToEndId = pedidoId.ToString()
+        };
 
         // Act
-        var resultado = await _endpoint.NotificacaoStatusPagamento(pedidoId, notificacao);
+        var resultado = await _endpoint.NotificacaoStatusPagamento(notificacao);
 
         // Assert
         resultado.Should().BeOfType<OkResult>();

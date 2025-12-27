@@ -23,12 +23,12 @@ namespace Soat.Eleven.Pedidos.Api.Controllers
         /// Recebe notificação de status de pagamento de outro serviço
         /// </summary>
         [HttpPost("{pedidoId:guid}/notificacao")]
-        public async Task<IActionResult> NotificacaoStatusPagamento(Guid pedidoId, [FromBody] ConfirmacaoPagamento notificacao)
+        public async Task<IActionResult> NotificacaoStatusPagamento([FromBody] ConfirmacaoPagamento notificacao)
         {
             try
             {
                 var controller = new PagamentoController(_pedidoDataSource);
-                await controller.AtualizarStatusPagamento(notificacao, pedidoId);
+                await controller.AtualizarStatusPagamento(notificacao, new Guid(notificacao.EndToEndId));
                 return Ok();
             }
             catch (Exception ex)
