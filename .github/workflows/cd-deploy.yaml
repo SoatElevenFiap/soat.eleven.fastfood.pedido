@@ -31,18 +31,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-          
-      - name: Verify Azure Context
-        run: |
-          echo "Verificando conta ativa..."
-          az account show --query "{SubscriptionName:name, SubscriptionId:id, TenantId:tenantId}" --output table
-          
-          echo "Verificando se o robô tem acesso ao Resource Group..."
-          # Tenta listar os recursos do seu RG para validar a permissão 'Contributor'
-          az resource list --resource-group ${{ env.AKS_RESOURCE_GROUP }} --output table
-
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       # 2. Login no ACR
       - name: Azure Container Registry Login
         run: az acr login --name acrfastfoodpostech
