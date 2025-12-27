@@ -89,7 +89,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "🧹 Limpando job anterior..."
-          kubectl delete job migrator -n $NAMESPACE --ignore-not-found=true
+          kubectl delete job migrator-pedidos -n $NAMESPACE --ignore-not-found=true
           
           echo "🚀 Renderizando e aplicando Job de Migração..."
           helm template migrator-job $CHART_PATH \
@@ -105,8 +105,7 @@ jobs:
             --show-only templates/secret.yaml | kubectl apply -f -
           
           echo "⏳ Aguardando migração finalizar..."
-          kubectl wait --for=condition=complete job/migrator -n $NAMESPACE --timeout=300s
-
+          kubectl wait --for=condition=complete job/migrator-pedidos -n $NAMESPACE --timeout=300s
       # 8. Deploy da Aplicação (Com rollback automático)
       - name: Deploy Application via Helm
         env:
