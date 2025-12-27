@@ -27,24 +27,24 @@ spec:
               echo "=== DEBUG: Variáveis de conexão ==="
               echo "POSTGRES_HOST: $POSTGRES_HOST"
               echo "POSTGRES_PORT: $POSTGRES_PORT"
-              echo "POSTGRES_DB: $POSTGRES_DB"
+              echo "POSTGRES_DB_PEDIDOS: $POSTGRES_DB_PEDIDOS"
               echo "POSTGRES_USER: $POSTGRES_USER"
               echo "POSTGRES_PASSWORD: [MASKED]"
               echo "=== Connection String (mascarada) ==="
-              echo "Host=$POSTGRES_HOST;Port=$POSTGRES_PORT;Database=$POSTGRES_DB;Username=$POSTGRES_USER;Password=[MASKED];SslMode=Require;TrustServerCertificate=true"
+              echo "Host=$POSTGRES_HOST;Port=$POSTGRES_PORT;Database=$POSTGRES_DB_PEDIDOS;Username=$POSTGRES_USER;Password=[MASKED];SslMode=Require;TrustServerCertificate=true"
               echo "=== Iniciando Migration ==="
-              dotnet ef database update --connection 'Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true' --project src/Soat.Eleven.FastFood.Infra/Soat.Eleven.FastFood.Adapter.Infra.csproj --startup-project src/Soat.Eleven.FastFood.Api/Soat.Eleven.FastFood.Adapter.WebApi.csproj
+              dotnet ef database update --connection 'Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB_PEDIDOS);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true' --project src/Soat.Eleven.FastFood.Infra/Soat.Eleven.FastFood.Adapter.Infra.csproj --startup-project src/Soat.Eleven.FastFood.Api/Soat.Eleven.FastFood.Adapter.WebApi.csproj
           env:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: pedidos-config
                   key: POSTGRES_HOST
-            - name: POSTGRES_DB
+            - name: POSTGRES_DB_PEDIDOS
               valueFrom:
                 configMapKeyRef:
                   name: pedidos-config
-                  key: POSTGRES_DB
+                  key: POSTGRES_DB_PEDIDOS
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
@@ -61,7 +61,7 @@ spec:
                   name: db-credentials
                   key: POSTGRES_PASSWORD
             - name: ConnectionStrings__PostgresConnectionString
-              value: "Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true"
+              value: "Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB_PEDIDOS);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true"
           image: "{{ .Values.image.migratorRepository }}"
           name: migrator
           imagePullPolicy: IfNotPresent
