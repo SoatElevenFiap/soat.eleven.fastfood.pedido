@@ -1,9 +1,11 @@
 ﻿using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Soat.Eleven.FastFood.Pedidos.Api.Configuration;
 
+[ExcludeFromCodeCoverage]
 public static class KeyVaultConfiguration
 {
     public static WebApplicationBuilder ConfigureKeyVault(this WebApplicationBuilder builder)
