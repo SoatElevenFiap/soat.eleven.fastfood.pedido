@@ -9,7 +9,7 @@ COPY src/Soat.Eleven.Pedidos.Application/*.csproj src/Soat.Eleven.Pedidos.Applic
 COPY src/Soat.Eleven.Pedidos.Core/*.csproj src/Soat.Eleven.Pedidos.Core/
 COPY src/Soat.Eleven.Pedidos.Infra/*.csproj src/Soat.Eleven.Pedidos.Infra/
 
-RUN dotnet restore src/Soat.Eleven.Pedidos.sln
+RUN dotnet restore src/soat.eleven.pedido.sln
 
 COPY . .
 
