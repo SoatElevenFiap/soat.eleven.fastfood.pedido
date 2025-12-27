@@ -1,13 +1,13 @@
+{{- if not (lookup "v1" "ConfigMap" .Release.Namespace "fastfood-config") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: fastfood-config
-  namespace: fastfood 
+  namespace: {{ .Release.Namespace }}
 data:
-  POSTGRES_HOST: "{{ .Values.postgres.host }}" # <--- APONTA PARA O AZURE DB
-  POSTGRES_DB_PEDIDOS: "{{ .Values.postgres.db }}"
-  POSTGRES_PORT: "{{ .Values.postgres.port }}"
+  POSTGRES_HOST: {{ .Values.postgres.host | quote }}
+  POSTGRES_PORT: {{ .Values.postgres.port | default "5432" | quote }}
+  POSTGRES_DB_PEDIDOS: {{ .Values.postgres.db | quote }}
   ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:80"
-  # PAGAMENTO_CLIENT_ID: "{{ .Values.pagamento.clientId }}"
-  # PAGAMENTO_BASE_URL: "{{ .Values.pagamento.baseUrl }}"
+{{- end -}}
