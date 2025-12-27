@@ -1,5 +1,21 @@
 # FastFood Pedido - Microsserviço de Pedidos
 
+## Índice
+
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Testes BDD](#testes-bdd-behavior-driven-development)
+- [Testes de Unidade](#testes-de-unidade)
+  - [Cobertura de Código](#cobertura-de-código)
+- [Deploy e Infraestrutura](#deploy-e-infraestrutura)
+- [Pré-requisitos](#pré-requisitos)
+- [Como Executar Localmente](#como-executar-localmente)
+- [Executando os Testes](#executando-os-testes)
+- [Arquitetura](#arquitetura)
+
+---
+
 ## Sobre o Projeto
 
 Este repositório contém o **microsserviço de Pedidos e Pagamentos** da solução **FastFood**, uma aplicação desenvolvida para lanchonetes de fast food como parte do projeto de pós-graduação em **Arquitetura de Software** da **FIAP**.
@@ -84,6 +100,35 @@ Os testes BDD estão localizados na pasta `Soat.Eleven.FastFood.Tests/0 - BDD/` 
 - **Hooks/** - Configurações e hooks do ciclo de vida dos testes
 
 Os testes BDD permitem descrever o comportamento esperado do sistema em uma linguagem natural, facilitando a comunicação entre desenvolvedores, QA e stakeholders.
+
+---
+
+## Testes de Unidade
+
+O projeto possui uma ampla cobertura de **testes de unidade** distribuídos nas camadas da aplicação, garantindo a qualidade e confiabilidade do código.
+
+### Tecnologias e Ferramentas
+
+- **xUnit** - Framework de testes unitários para .NET
+- **Moq** - Biblioteca para criação de mocks e stubs
+- **FluentAssertions** - Assertions fluentes para testes mais legíveis
+- **Bogus** - Geração de dados fake para testes
+
+### <a id="cobertura-de-código"></a>Cobertura de Código
+
+O projeto mantém uma **cobertura de testes superior a 90%**, garantindo que a maior parte do código esteja coberta por testes automatizados. Esta cobertura abrange:
+
+- Testes da camada de **API** - Validação de endpoints e configurações
+- Testes da camada de **Application** - Validação dos controllers e orquestração
+- Testes da camada de **Core** - Validação de entidades, casos de uso e regras de negócio
+- Testes da camada de **Infra** - Validação de repositórios, gateways e serviços
+
+### Visualização da Cobertura
+![BDD](.docs/images/bdd.png)
+![Cobertura de Testes](.docs/images/unitTests.png)
+![Sonar Scan Coverage](.docs/images/sonar.png)
+
+*A imagem acima demonstra a cobertura detalhada dos testes por camada da aplicação.*
 
 ---
 
