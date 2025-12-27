@@ -6,7 +6,7 @@ using Soat.Eleven.Pedidos.Core.Interfaces.DataSources;
 namespace Soat.Eleven.Pedidos.Api.Controllers
 {
     [ApiController]
-    [Route("api/Pagamento")]
+    [Route("api/pagamento")]
     public class PagamentoRestEndpoint : ControllerBase
     {
         private readonly ILogger<PagamentoRestEndpoint> _logger;
@@ -22,7 +22,7 @@ namespace Soat.Eleven.Pedidos.Api.Controllers
         /// <summary>
         /// Recebe notificação de status de pagamento de outro serviço
         /// </summary>
-        [HttpPost("{pedidoId:guid}/notificacao")]
+        [HttpPost("/notificacao")]
         public async Task<IActionResult> NotificacaoStatusPagamento([FromBody] ConfirmacaoPagamento notificacao)
         {
             try
