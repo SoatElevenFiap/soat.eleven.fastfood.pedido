@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Soat.Eleven.FastFood.Pedidos.Api.Configuration;
 using Soat.Eleven.Pedidos.Api.Configuration;
+using Soat.Eleven.Pedidos.Core.Enums;
 using Soat.Eleven.Pedidos.Infra.Data;
+using System.Text;
 
-const string SECRET_KEY_PASS = "5180e58ff93cef142763fdf3cc11f36c16335292a69bf201a4f72a834e625038032d04823966b02ff320564a0bc677c4bdcf3d67be724879b33711b04ba3e337";
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.ConfigureKeyVault();
+builder.ConfigureKeyVault();
 
 // Add services to the container.
 
@@ -25,31 +29,31 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddCors();
 
-//builder.Services.AddAuthentication(option =>
-//{
-//    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//    .AddJwtBearer(option =>
-//    {
-//        option.RequireHttpsMetadata = false;
-//        option.SaveToken = true;
-//        option.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuerSigningKey = true,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)),
-//            ValidateIssuer = false,
-//            ValidateAudience = false
-//        };
-//    });
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(option =>
+    {
+        option.RequireHttpsMetadata = false;
+        option.SaveToken = true;
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
-//builder.Services.AddAuthorization(option =>
-//{
-//    option.AddPolicy("Cliente", policy => policy.RequireRole(RolesAuthorization.Cliente));
-//    option.AddPolicy("Administrador", policy => policy.RequireRole(RolesAuthorization.Administrador));
-//    option.AddPolicy("ClienteTotem", policy => policy.RequireRole([RolesAuthorization.Cliente, RolesAuthorization.IdentificacaoTotem]));
-//    option.AddPolicy("Commom", policy => policy.RequireRole([RolesAuthorization.Cliente, RolesAuthorization.Administrador]));
-//});
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("Cliente", policy => policy.RequireRole(RolesAuthorization.Cliente));
+    option.AddPolicy("Administrador", policy => policy.RequireRole(RolesAuthorization.Administrador));
+    option.AddPolicy("ClienteTotem", policy => policy.RequireRole([RolesAuthorization.Cliente, RolesAuthorization.IdentificacaoTotem]));
+    option.AddPolicy("Commom", policy => policy.RequireRole([RolesAuthorization.Cliente, RolesAuthorization.Administrador]));
+});
 
 // Add Health Checks
 builder.Services.AddHealthChecks()
