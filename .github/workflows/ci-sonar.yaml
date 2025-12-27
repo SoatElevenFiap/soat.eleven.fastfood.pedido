@@ -59,7 +59,7 @@ jobs:
 
       # 7. Restore dependencies
       - name: Restore dependencies
-        run: dotnet restore src/soat.eleven.pedido.sln
+        run: dotnet restore src/Soat.Eleven.Pedidos.sln
 
       # 8. Begin SonarCloud analysis
       - name: Begin SonarCloud analysis
@@ -75,12 +75,12 @@ jobs:
 
       # 9. Build project
       - name: Build project
-        run: dotnet build src/soat.eleven.pedido.sln --configuration Release --no-restore
+        run: dotnet build src/Soat.Eleven.Pedidos.sln --configuration Release --no-restore
 
       # 10. Run tests with coverage
       - name: Run tests
         run: |
-          dotnet test src/soat.eleven.pedido.sln \
+          dotnet test src/Soat.Eleven.Pedidos.sln \
             --no-build \
             --configuration Release \
             --verbosity normal \
