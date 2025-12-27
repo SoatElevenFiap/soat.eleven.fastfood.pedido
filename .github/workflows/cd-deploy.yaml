@@ -71,6 +71,9 @@ jobs:
       # 6. Validação do Chart (Segurança extra antes de aplicar)
       - name: Helm Lint
         run: helm lint $CHART_PATH
+        
+      - name: Create Namespace
+        run: kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
       # 7. Executar Migration Job
       - name: Run Database Migration
