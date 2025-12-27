@@ -1,9 +1,9 @@
-using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Soat.Eleven.Pedidos.Core.DTOs.Pagamentos;
 using Soat.Eleven.Pedidos.Core.Interfaces.Services;
+using System.Net.Http.Json;
 
 namespace Soat.Eleven.Pedidos.Adapter.Infra.Services;
 
@@ -35,13 +35,13 @@ public class PagamentoService : IPagamentoService
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/api/pagamento", request);
-            
+
             response.EnsureSuccessStatusCode();
-            
+
             var result = await response.Content.ReadFromJsonAsync<OrdemPagamentoResponse>();
-            
-            return result ?? new OrdemPagamentoResponse 
-            { 
+
+            return result ?? new OrdemPagamentoResponse
+            {
                 Status = "pending"
             };
         }

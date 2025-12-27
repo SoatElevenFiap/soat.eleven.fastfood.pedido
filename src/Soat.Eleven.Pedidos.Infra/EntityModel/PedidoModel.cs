@@ -13,7 +13,7 @@ namespace Soat.Eleven.Pedidos.Adapter.Infra.EntityModel
         public PedidoModel(Guid tokenAtendimentoId, Guid? clienteId, decimal subtotal, decimal desconto, decimal total, string senhaPedido)
         {
             TokenAtendimentoId = tokenAtendimentoId;
-            ClienteId = clienteId;                    
+            ClienteId = clienteId;
             Subtotal = subtotal;
             Desconto = desconto;
             Total = total;

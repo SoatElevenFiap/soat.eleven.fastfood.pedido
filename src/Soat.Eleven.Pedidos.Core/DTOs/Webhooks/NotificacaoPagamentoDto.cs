@@ -1,6 +1,4 @@
-﻿using Soat.Eleven.Pedidos.Core.Enums;
-
-namespace Soat.Eleven.Pedidos.Core.DTOs.Webhooks;
+﻿namespace Soat.Eleven.Pedidos.Core.DTOs.Webhooks;
 
 public class NotificacaoPagamentoDto
 {

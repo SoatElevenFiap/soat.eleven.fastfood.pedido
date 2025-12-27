@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Soat.Eleven.Pedidos.Core.Enums;
 
 namespace Soat.Eleven.Pedidos.Core.DTOs.Pagamentos
 {

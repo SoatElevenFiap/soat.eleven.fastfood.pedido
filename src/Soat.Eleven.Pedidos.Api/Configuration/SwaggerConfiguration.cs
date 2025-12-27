@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
+﻿using Microsoft.OpenApi.Models;
 
 namespace Soat.Eleven.Pedidos.Api.Configuration;
 

@@ -1,6 +1,6 @@
 ﻿namespace Soat.Eleven.Pedidos.Adapter.Infra.EntityModel.Base;
 
-public class EntityBase: TEntity, TAuditable
+public class EntityBase : TEntity, TAuditable
 {
     public Guid Id { get; set; }
     public DateTime CriadoEm { get; set; }
