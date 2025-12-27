@@ -13,7 +13,7 @@ public class Pedido
     public Pedido(Guid tokenAtendimentoId, Guid? clienteId, decimal subtotal, decimal desconto, decimal total)
     {
         TokenAtendimentoId = tokenAtendimentoId;
-        ClienteId = clienteId;                    
+        ClienteId = clienteId;
         Subtotal = subtotal;
         Desconto = desconto;
         Total = total;
@@ -30,10 +30,10 @@ public class Pedido
     public string SenhaPedido
     {
         get { return senhaPedido; }
-        set 
+        set
         {
             Condition.Require(value, "SenhaPedido").IsNullOrEmpty();
-            senhaPedido = value; 
+            senhaPedido = value;
         }
     }
 

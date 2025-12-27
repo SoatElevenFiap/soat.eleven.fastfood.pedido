@@ -16,6 +16,6 @@ namespace Soat.Eleven.Pedidos.Core.DTOs.Pedidos
 
         public DateTime CriadoEm { get; set; }
 
-        public ICollection<ItemPedidoOutputDto> Itens { get; set; } = [];     
+        public ICollection<ItemPedidoOutputDto> Itens { get; set; } = [];
     }
 }

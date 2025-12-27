@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Soat.Eleven.Pedidos.Application.Controllers;
 using Soat.Eleven.Pedidos.Core.DTOs.Pedidos;
-using Soat.Eleven.Pedidos.Core.Entities;
 using Soat.Eleven.Pedidos.Core.Enums;
 using Soat.Eleven.Pedidos.Core.Interfaces.DataSources;
 using Soat.Eleven.Pedidos.Core.Interfaces.Services;

@@ -7,13 +7,13 @@ namespace Soat.Eleven.Pedidos.Core.Gateways
     public class PedidoGateway
     {
         private IPedidoDataSource _pedidoDataSource;
-        
+
         public PedidoGateway(IPedidoDataSource dataSource)
         {
             _pedidoDataSource = dataSource;
         }
 
-       
+
         public async Task<Pedido> AtualizarPedido(Pedido pedido)
         {
             var dto = new PedidoInputDto

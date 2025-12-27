@@ -16,7 +16,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app-service
+            name: app-service-pedidos
             port:
               number: 80
 {{- end }}

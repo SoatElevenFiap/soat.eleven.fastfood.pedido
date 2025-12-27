@@ -16,7 +16,7 @@ public class PagamentoController
     public async Task AtualizarStatusPagamento(ConfirmacaoPagamento notificacao, Guid pedidoId)
     {
         var novoStatus = PagamentoStatusTranslator.ToStatusPedido(notificacao.Status);
-        
+
         if (novoStatus.HasValue)
         {
             await _pedidoDataSource.AtualizarStatusAsync(pedidoId, novoStatus.Value);

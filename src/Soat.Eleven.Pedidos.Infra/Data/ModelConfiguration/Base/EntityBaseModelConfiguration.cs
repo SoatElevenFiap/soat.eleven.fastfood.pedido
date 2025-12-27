@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Soat.Eleven.Pedidos.Adapter.Infra.EntityModel.Base;
 
 namespace Soat.Eleven.Pedidos.Infra.Data.ModelConfiguration.Base

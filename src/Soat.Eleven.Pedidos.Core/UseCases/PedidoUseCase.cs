@@ -22,7 +22,7 @@ public class PedidoUseCase
     public async Task<Pedido> CriarPedido(PedidoInputDto pedidoDto)
     {
         var pedido = new Pedido(
-            pedidoDto.TokenAtendimentoId, 
+            pedidoDto.TokenAtendimentoId,
             pedidoDto.ClienteId,
             pedidoDto.Subtotal,
             pedidoDto.Desconto,
@@ -77,7 +77,7 @@ public class PedidoUseCase
     {
         var pedidos = await _pedidoGateway.ListarPedidos();
 
-        var pedidoFiltrado = 
+        var pedidoFiltrado =
             pedidos.Where(e => e.Status != StatusPedido.Finalizado)
                .OrderByDescending(e => e.Status)
                .OrderByDescending(e => e.CriadoEm)

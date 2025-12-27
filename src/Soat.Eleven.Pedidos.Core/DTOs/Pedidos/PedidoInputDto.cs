@@ -1,5 +1,4 @@
-﻿using Soat.Eleven.Pedidos.Core.Entities;
-using Soat.Eleven.Pedidos.Core.Enums;
+﻿using Soat.Eleven.Pedidos.Core.Enums;
 
 namespace Soat.Eleven.Pedidos.Core.DTOs.Pedidos
 {
