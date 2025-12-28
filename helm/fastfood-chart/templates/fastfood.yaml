@@ -78,12 +78,16 @@ spec:
                   key: PAGAMENTO_BASE_URL
             - name: ConnectionStrings__PostgresConnectionString
               value: "Host=$(POSTGRES_HOST);Port=$(POSTGRES_PORT);Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);SslMode=Require;TrustServerCertificate=true"
-            
             - name: JwtSettings__SecretKey
-                valueFrom:
-                  secretKeyRef:
-                    name: db-credentials  
-                    key: JwtSettings--SecretKey
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials  
+                  key: JwtSettings--SecretKey
+            - name: SaltKey
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: SaltKey
           ports:
             - containerPort: 80
               protocol: TCP
