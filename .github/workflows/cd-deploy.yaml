@@ -115,8 +115,8 @@ jobs:
           echo "🧹 Removendo releases e recursos órfãos anteriores..."
           helm uninstall pedidos-release -n $NAMESPACE --ignore-not-found || true
           kubectl delete configmap pedidos-config -n $NAMESPACE --ignore-not-found=true
-          kubectl delete secret db-credentials -n $NAMESPACE --ignore-not-found=true
-          
+          kubectl delete secret db-credentials-pedidos -n $NAMESPACE --ignore-not-found=true
+
           echo "🔐 Atualiza/Cria secret do ACR..."
           kubectl create secret docker-registry acr-secret \
             --docker-server=$REGISTRY \
@@ -138,6 +138,4 @@ jobs:
             --set pagamento.clientId="${{ secrets.PAGAMENTO_CLIENT_ID }}" \
             --set image.repository=$REGISTRY/$APP_IMAGE_NAME \
             --set image.tag=${{ github.sha }} \
-            --set credentials.jwtSecret="${{ secrets.APP_SECRET_KEY }}" \
-            --set credentials.saltKey="${{ secrets.APP_SALT_KEY }}" \
             --atomic
