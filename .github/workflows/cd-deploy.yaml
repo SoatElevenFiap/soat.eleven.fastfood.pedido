@@ -136,6 +136,8 @@ jobs:
             --set credentials.password="${{ secrets.POSTGRES_PASSWORD }}" \
             --set pagamento.baseUrl="${{ secrets.PAGAMENTO_BASE_URL }}" \
             --set pagamento.clientId="${{ secrets.PAGAMENTO_CLIENT_ID }}" \
+            --set credentials.jwtSecret="${{ secrets.APP_SECRET_KEY }}" \
+            --set credentials.saltKey="${{ secrets.APP_SALT_KEY }}" \
             --set image.repository=$REGISTRY/$APP_IMAGE_NAME \
             --set image.tag=${{ github.sha }} \
             --atomic
