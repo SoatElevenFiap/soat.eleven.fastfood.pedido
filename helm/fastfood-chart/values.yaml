@@ -45,4 +45,5 @@ ingress:
 credentials: 
   user: "" # Será definido via --set no Helm
   password: "" # Será definido via --set no Helm 
-  jwtSecret:
+  jwtSecret: ""
+  saltKey: ""
